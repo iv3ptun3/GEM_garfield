@@ -1,3 +1,6 @@
+#ifndef PARMANGER_HPP
+#define PARMANGER_HPP
+
 // this class load parameter file.
 #include <string>
 #include <unordered_map>
@@ -21,3 +24,5 @@ class ParManager{
         static ParManager* fInstance;
         static unordered_map<string, string> fParMap;
 };
+
+#endif // PARMANGER_HPP

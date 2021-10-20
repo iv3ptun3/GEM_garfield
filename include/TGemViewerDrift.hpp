@@ -1,5 +1,5 @@
-#ifndef TGEMVIEWERDrift_HPP
-#define TGEMVIEWERDrift_HPP
+#ifndef TGEMVIEWERDRIFT_HPP
+#define TGEMVIEWERDRIFT_HPP
 
 #include "Garfield/ComponentFieldMap.hh"
 #include "Garfield/MediumGas.hh"
@@ -33,4 +33,4 @@ class TGemViewerDrift : public TGemViewerBase{
         bool fEnableDriftIons;
 };
 
-#endif // TGemViewerRIFT_HPP
+#endif // TGEMVIEWERDRIFT_HPP

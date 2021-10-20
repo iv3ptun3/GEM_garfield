@@ -30,4 +30,4 @@ class TGemViewerBase{
         double fNx, fNy, fNz, fx0, fy0, fz0;
 };
 
-#endif // TGemViewerBase_HPP
+#endif // TGEMVIEWERBASE_HPP
