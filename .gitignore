@@ -1,0 +1,3 @@
+build/
+.vscode/
+pysource/__pycache__/

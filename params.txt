@@ -1,0 +1,51 @@
+# parameter files for a triple GEM simulations
+# information must be given in order of 
+# parameter name, value, id
+# The unit of length is cm.
+# The unit of electric field is V/cm.
+# The unit of voltage is V.
+
+# ---------------------------------- upper exterior electrode
+# DZ_ELECTRODE
+# ---------------------------------- GEM1
+# ---------------------------------- DV_GEM1
+# DZ_GEM12
+# ---------------------------------- GEM2
+# ---------------------------------- DV_GEM2
+# DZ_GEM23
+# ---------------------------------- GEM3
+# ---------------------------------- DV_GEM3
+# DZ_PADPLANE
+# ---------------------------------- pad plane(z = 0)
+
+# GEM dimensions
+R_INNER         0.0025
+R_OUTER         0.0035
+R_ETCH          0.0040
+PITCH           0.0140
+T_COPPER        0.0005
+T_DIEL          0.0050
+
+# Distance between GEMs, pad plane and electrode
+DZ_ELECTRODE        0.2
+DZ_GEM12            0.2
+DZ_GEM23            0.2
+DZ_PADPLANE         0.2
+
+# Mesh sizes at the given points
+MSIZE_DRIFT                 0.005
+MSIZE_ETCH_HOLE             0.0008
+MSIZE_DIEL_INNER_HOLE       0.0010
+MSIZE_DIEL_OUTER_HOLE       0.0015
+MSIZE_HOLE_CENTER           0.0025
+
+# Electric field density
+E_TRANS             1000
+E_DRIFT             1000
+E_INDUCTION         1000
+
+# Voltage differences between copper layers of GEMs
+DV_GEM1             300
+DV_GEM2             300
+DV_GEM3             300
+
