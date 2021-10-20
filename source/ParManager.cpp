@@ -37,7 +37,8 @@ void ParManager::initPars()
             continue;
         else if(pars.size() != 2)
         {
-            printf("Error occured reading line %4d in file %s.\n", lineNum, lineStr.data());
+            printf("In ParManager::initPars() :\n" );
+            printf("Error : reading line %4d in file %s.\n", lineNum, lineStr.data());
             continue;
         }
         else
@@ -54,16 +55,29 @@ double ParManager::getParD(string parName) const
     auto it = fParMap.find(parName);
     if(it == fParMap.end())
     {
-        cout << "Error in ParManager::getParD(string parName)." << endl;
-        cout << "Cannot find parameter " << parName << "." << endl;
+        cout << "In ParManager::getParD(string parName)." << endl;
+        cout << "Error : Cannot find parameter " << parName << "." << endl;
         return 0.;
     }
     return atof(it->second.data());
 }
 
+
+std::string ParManager::getParS(string parName) const
+{
+    auto it = fParMap.find(parName);
+    if(it == fParMap.end())
+    {
+        cout << "In ParManager::getParS(string parName)." << endl;
+        cout << "Error : Cannot find parameter " << parName << "." << endl;
+        return "";
+    }
+    return it->second;
+}
+
 void ParManager::listPars() const
 {
-    cout << "listing " << fParMap.size() << " parameters..." << endl;
+    cout << "Listing " << fParMap.size() << " parameters..." << endl;
     for(auto i : fParMap)
     {
         printf("%-30s %s\n", i.first.data(), i.second.data());

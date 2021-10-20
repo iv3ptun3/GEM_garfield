@@ -49,3 +49,6 @@ DV_GEM1             300
 DV_GEM2             300
 DV_GEM3             300
 
+# Gas configuration
+MEDIUM_GAS          he
+QUANCHING_GAS       ich4h10

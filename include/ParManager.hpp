@@ -13,6 +13,7 @@ class ParManager{
         static ParManager* getInstance(string fileName);
         static void initPars();
         double getParD(string parName) const;
+        std::string getParS(string parName) const;
         void listPars() const;
     private:
         ParManager(string fileName){fFileName = fileName;}
