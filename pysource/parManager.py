@@ -5,28 +5,28 @@ class ParManager:
     :return:
     '''
     __instance = None
-    __fileName = ""
     __paramMap = None
     __lineNum = 0
-    def __init__(cls, fileName, print):
+    def __init__(cls, print):
         if ParManager.__instance == None:
             ParManager.__instance = cls
-            ParManager.__fileName = fileName
             ParManager.__printPars = print
     @classmethod
-    def instance(cls, fileName, print = True):
+    def instance(cls, print = True):
         if ParManager.__instance == None:
-            ParManager.__instance = cls(fileName, print)
+            ParManager.__instance = cls(print)
+        else:
+            ParManager.__instance.__printPars = print
         return ParManager.__instance
 
     @classmethod
-    def initPars(cls):
+    def initPars(cls, fileName):
         ParManager.__lineNum = 0
         ParManager.__paramMap = {}
         parName, parValue = "", ""
-        file = open(ParManager.__fileName, "r")
+        file = open(fileName, "r")
         if ParManager.__printPars:
-            print("File " + ParManager.__fileName +  " opened...")        
+            print("File " + fileName + " opened...")        
         # loop for parameter initializations
         while(True):
             if ParManager.__getNextPar(file) == False:
@@ -40,7 +40,7 @@ class ParManager:
                 print("%-30s %s"%(key, value))
         file.close()
         if ParManager.__printPars:
-            print("File " + ParManager.__fileName +  " closed...")
+            print("File " + fileName + " closed...")
 
     @classmethod
     def insertParValuesInText(cls, txt):
@@ -83,7 +83,7 @@ class ParManager:
                 continue
             # check format
             elif len(valList) != 2:
-                print("Cannot process line %5d of file %s : %s"%(ParManager.__lineNum, ParManager.__fileName, strLine))
+                print("Cannot process line %5d  : %s"%(ParManager.__lineNum, strLine))
                 return False
             ParManager.__paramMap[valList[0]] = valList[1]
             return True

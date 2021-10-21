@@ -5,24 +5,23 @@
 #include <cstdlib>
 
 ParManager* ParManager::fInstance = nullptr;
-string ParManager::fFileName = "";
 unordered_map<string, string> ParManager::fParMap = std::unordered_map<string, string>();
 
-ParManager* ParManager::getInstance(string fileName)
+ParManager* ParManager::getInstance()
 {
     if(fInstance == nullptr)
-        fInstance = new ParManager(fileName);
+        fInstance = new ParManager();
     return fInstance;
 }
 
-void ParManager::initPars()
+void ParManager::initPars(string fileName)
 {
     int lineNum = 0;
     vector<string> pars;
     std::string lineStr = "";
     std::string command = "";    
-    ifstream fIn(fFileName.data(), ios::in);
-    cout << "File " << fFileName << " opened." << endl;
+    ifstream fIn(fileName.data(), ios::in);
+    cout << "File " << fileName << " opened." << endl;
     while(true)
     {
         // check end of the line
@@ -46,7 +45,7 @@ void ParManager::initPars()
     }
     cout << fParMap.size() << " parameters registered." << endl;
     fIn.close();
-    cout << "File " << fFileName << " closed." << endl;
+    cout << "File " << fileName << " closed." << endl;
 
 }
 

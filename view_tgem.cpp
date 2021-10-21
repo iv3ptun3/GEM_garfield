@@ -24,8 +24,8 @@ using namespace Garfield;
 int main(int argc, char *argv[])
 {
     TApplication app("app", &argc, argv);
-    auto parMan = ParManager::getInstance("params.txt");
-    parMan->initPars();
+    auto parMan = ParManager::getInstance();
+    parMan->initPars("params.txt");
     // tripple gem dimension
     const double pitch = parMan->getParD("PITCH");
     const double tD = parMan->getParD("T_DIEL");

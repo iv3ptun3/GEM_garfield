@@ -15,8 +15,8 @@ if len(sys.argv) < 3 or "--help" in sys.argv:
     exit()
 
 # loading parameters
-reader = pr.ParManager.instance("params.txt", True)
-reader.initPars()
+reader = pr.ParManager.instance(True)
+reader.initPars("params.txt")
 if "-geo" in sys.argv or "-all" in sys.argv:
     # generating geometry(.geo) file
     print("Generating tgemcell.geo file..., ", end="")
