@@ -41,7 +41,6 @@ int main(int argc, char *argv[])
     const double eTrans = parMan->getParD("E_TRANS");
     const double eDrift = parMan->getParD("E_DRIFT");
     const double eInduction = parMan->getParD("E_INDUCTION");
-
     // parMan->listPars();
 
     // Load the field map.

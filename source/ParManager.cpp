@@ -1,8 +1,10 @@
-#include "ParManager.hpp"
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <cstdlib>
+
+#include "Errors.hpp"
+#include "ParManager.hpp"
 
 ParManager* ParManager::fInstance = nullptr;
 unordered_map<string, string> ParManager::fParMap = std::unordered_map<string, string>();
@@ -14,7 +16,7 @@ ParManager* ParManager::getInstance()
     return fInstance;
 }
 
-void ParManager::initPars(string fileName)
+void ParManager::initPars(const string fileName)
 {
     int lineNum = 0;
     vector<string> pars;
@@ -36,8 +38,8 @@ void ParManager::initPars(string fileName)
             continue;
         else if(pars.size() != 2)
         {
-            printf("In ParManager::initPars() :\n" );
-            printf("Error : reading line %4d in file %s.\n", lineNum, lineStr.data());
+            std::string message = "Cannot interpret the line " + std::to_string(lineNum) + ".";
+            printError("ParManager", "initPars(string)", message);
             continue;
         }
         else
@@ -49,20 +51,20 @@ void ParManager::initPars(string fileName)
 
 }
 
-double ParManager::getParD(string parName) const
+double ParManager::getParD(const string parName) const
 {
     auto it = fParMap.find(parName);
     if(it == fParMap.end())
     {
-        cout << "In ParManager::getParD(string parName)." << endl;
-        cout << "Error : Cannot find parameter " << parName << "." << endl;
+        std::string message = "A parameter " + parName + " is not registered.";
+        printError("ParManager", "getParD(const string)", message);
         return 0.;
     }
     return atof(it->second.data());
 }
 
 
-std::string ParManager::getParS(string parName) const
+std::string ParManager::getParS(const string parName) const
 {
     auto it = fParMap.find(parName);
     if(it == fParMap.end())
@@ -83,7 +85,7 @@ void ParManager::listPars() const
     }
 }
 
-bool ParManager::isEmptyLine(string str)
+bool ParManager::isEmptyLine(const string str)
 {
     for(auto i : str)
         if(!isspace(i))
@@ -91,7 +93,7 @@ bool ParManager::isEmptyLine(string str)
         return true;        
 }
 
-vector<string> ParManager::splitString(string str, char delim)
+vector<string> ParManager::splitString(const string str, char delim)
 {
     string tmp;
     vector<string> strVec;
