@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     const double dZp = parMan->getParD("DZ_PADPLANE");
     const double dZ12 = parMan->getParD("DZ_GEM12"); 
     const double dZ23 = parMan->getParD("DZ_GEM23"); 
-    const double dZe = parMan->getParD("DZ_ELECTRODE");
+    const double dZe = parMan->getParD("DZ_UPPERPLANE");
     // voltage
     const double dvg1 = parMan->getParD("DV_GEM1");
     const double dvg2 = parMan->getParD("DV_GEM2");

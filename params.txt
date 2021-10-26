@@ -5,17 +5,56 @@
 # The unit of electric field is V/cm.
 # The unit of voltage is V.
 
-# ---------------------------------- upper exterior electrode
-# DZ_ELECTRODE
+# A field map file of a triple GEM structure(region between upper boundary plane and pad plane)
+# are calculated using Gmsh and Elmer.
+# In the other hand, a field between electrode and upper boundary plane is considered constant.s
+
+# ---------------------------------- electrode
+# |   /\
+# |  /  \ 
+# |    |
+# |    |
+# |    |    DZ_ELECTRODE(Drift region of Constant analytic E-field)
+# |    |    
+# |    |   
+# |    |
+# |  \  /
+# |   \/
+# ---------------------------------- upper boundary plane between constant field and a triple GEM field.
+# |   /\
+# |  /  \ 
+# |    |
+# |    |
+# |    |    DZ_UPPERPLANE
+# |  \  /
+# |   \/
 # ---------------------------------- GEM1
 # ---------------------------------- DV_GEM1
-# DZ_GEM12
+# |   /\
+# |  /  \ 
+# |    |
+# |    |
+# |    |    DZ_GEM12
+# |  \  /
+# |   \/
 # ---------------------------------- GEM2
 # ---------------------------------- DV_GEM2
-# DZ_GEM23
+# |   /\
+# |  /  \ 
+# |    |
+# |    |
+# |    |    DZ_GEM23
+# |  \  /
+# |   \/
 # ---------------------------------- GEM3
 # ---------------------------------- DV_GEM3
-# DZ_PADPLANE
+# |   /\
+# |  /  \ 
+# |    |
+# |    |
+# |    |    DZ_PADPLANE
+# |  \  /
+# |   \/
 # ---------------------------------- pad plane(z = 0)
 
 # GEM dimensions
@@ -26,8 +65,9 @@ PITCH           0.0140
 T_COPPER        0.0005
 T_DIEL          0.0050
 
-# Distance between GEMs, pad plane and electrode
-DZ_ELECTRODE        0.2
+# Distance between GEMs, pad plane and upper boundary plane
+DZ_ELECTRODE        10
+DZ_UPPERPLANE       0.2
 DZ_GEM12            0.2
 DZ_GEM23            0.2
 DZ_PADPLANE         0.2
@@ -51,4 +91,11 @@ DV_GEM3             300
 
 # Gas configuration
 MEDIUM_GAS          he
+MEDIUM_GAS_FRAC     80.
 QUANCHING_GAS       ich4h10
+QUANCHING_GAS_FRAC  20.
+GAS_PRESSURE        760.
+GAS_TEMPERATURE     293.15
+GAS_PENNING_EFF     0.51
+GAS_PENNING_LAMB    0.
+GAS_ION_MOBILITY    /share/Garfield/Data/IonMobility_He+_He.txt

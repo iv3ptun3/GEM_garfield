@@ -6,9 +6,9 @@ rE = {R_ETCH}; // etch mount(= cupper hole radius > rO(hole radius on dielectric
 tC = {T_COPPER}; // copper thickness
 tD = {T_DIEL}; // dielectric thickness
 p = {PITCH}; // the "pitch", or distance between GEM holes
-dz12 = {DZ_ELECTRODE};
-dz23 = {DZ_GEM12};
-dzE = {DZ_GEM23};
+dz12 = {DZ_GEM12};
+dz23 = {DZ_GEM23};
+dzU = {DZ_UPPERPLANE};
 dzP = {DZ_PADPLANE};
 // Fourth input expression for Point() to control mesh sizes at the points.
 mshSizeDrift = {MSIZE_DRIFT};
@@ -24,7 +24,7 @@ zP = 0;
 z3 = zP + dzP;
 z2 = zP + dzP + dz12;
 z1 = zP + dzP + dz12 + dz23;
-zE = zP + dzP + dz12 + dz23 + dzE;
+zU = zP + dzP + dz12 + dz23 + dzU;
 bdrHalfX = p/2;
 bdrHalfY = p*Sqrt(3)/2;
 
@@ -1598,24 +1598,24 @@ v_g3_diel = newv; Volume(v_g3_diel) = {{sl_g3_diel}};
 // Gas
 // ---------------------------------------------------------------------------------------------------------------
 /*---------------------------------- Point Definitions -------------------------------------*/
-// upper electrode
-p_e1 = newp; Point(p_e1) = {{-bdrHalfX, -bdrHalfY,   zE, mshSizeDrift}};
-p_e2 = newp; Point(p_e2) = {{bdrHalfX, -bdrHalfY,    zE, mshSizeDrift}};
-p_e3 = newp; Point(p_e3) = {{bdrHalfX, bdrHalfY,     zE, mshSizeDrift}};
-p_e4 = newp; Point(p_e4) = {{-bdrHalfX, bdrHalfY,    zE, mshSizeDrift}};
+// upper boundary plane
+p_u1 = newp; Point(p_u1) = {{-bdrHalfX, -bdrHalfY,   zU, mshSizeDrift}};
+p_u2 = newp; Point(p_u2) = {{bdrHalfX, -bdrHalfY,    zU, mshSizeDrift}};
+p_u3 = newp; Point(p_u3) = {{bdrHalfX, bdrHalfY,     zU, mshSizeDrift}};
+p_u4 = newp; Point(p_u4) = {{-bdrHalfX, bdrHalfY,    zU, mshSizeDrift}};
 // pad plane
 p_p1 = newp; Point(p_p1) = {{-bdrHalfX, -bdrHalfY,   zP, mshSizeDrift}};
 p_p2 = newp; Point(p_p2) = {{bdrHalfX, -bdrHalfY,    zP, mshSizeDrift}};
 p_p3 = newp; Point(p_p3) = {{bdrHalfX, bdrHalfY,     zP, mshSizeDrift}};
 p_p4 = newp; Point(p_p4) = {{-bdrHalfX, bdrHalfY,    zP, mshSizeDrift}};
-// point between plates and electrode, pad
+// point between plates and upper boudnary, pad
 // this point is just for setting mesh size to prevent over refinement in drifing regions.
-// between upper elecgrode and GEm2
-p_eg1_1 = newp; Point(p_eg1_1) = {{-bdrHalfX, -bdrHalfY, (zE + z1)/2, mshSizeDrift}};
-p_eg1_2 = newp; Point(p_eg1_2) = {{bdrHalfX, -bdrHalfY,  (zE + z1)/2, mshSizeDrift}};
-p_eg1_3 = newp; Point(p_eg1_3) = {{bdrHalfX, bdrHalfY,   (zE + z1)/2, mshSizeDrift}};
-p_eg1_4 = newp; Point(p_eg1_4) = {{-bdrHalfX, bdrHalfY,  (zE + z1)/2, mshSizeDrift}};
-// between GEm2 and GEM1
+// between upper elecgrode and GEM2
+p_ug1_1 = newp; Point(p_ug1_1) = {{-bdrHalfX, -bdrHalfY, (zU + z1)/2, mshSizeDrift}};
+p_ug1_2 = newp; Point(p_ug1_2) = {{bdrHalfX, -bdrHalfY,  (zU + z1)/2, mshSizeDrift}};
+p_ug1_3 = newp; Point(p_ug1_3) = {{bdrHalfX, bdrHalfY,   (zU + z1)/2, mshSizeDrift}};
+p_ug1_4 = newp; Point(p_ug1_4) = {{-bdrHalfX, bdrHalfY,  (zU + z1)/2, mshSizeDrift}};
+// between GEM2 and GEM1
 p_g1g2_1 = newp; Point(p_g1g2_1) = {{-bdrHalfX, -bdrHalfY, (z1 + z2)/2, mshSizeDrift}};
 p_g1g2_2 = newp; Point(p_g1g2_2) = {{bdrHalfX, -bdrHalfY,  (z1 + z2)/2, mshSizeDrift}};
 p_g1g2_3 = newp; Point(p_g1g2_3) = {{bdrHalfX, bdrHalfY,   (z1 + z2)/2, mshSizeDrift}};
@@ -1631,20 +1631,20 @@ p_g3p_2 = newp; Point(p_g3p_2) = {{bdrHalfX, -bdrHalfY,  (z3 + zP)/2, mshSizeDri
 p_g3p_3 = newp; Point(p_g3p_3) = {{bdrHalfX, bdrHalfY,   (z3 + zP)/2, mshSizeDrift}};
 p_g3p_4 = newp; Point(p_g3p_4) = {{-bdrHalfX, bdrHalfY,  (z3 + zP)/2, mshSizeDrift}};
 /*---------------------------------- Line Definitions -------------------------------------*/
-// electrode
-l_e1 = newl; Line(l_e1) = {{p_e1, p_e2}};
-l_e2 = newl; Line(l_e2) = {{p_e2, p_e3}};
-l_e3 = newl; Line(l_e3) = {{p_e3, p_e4}};
-l_e4 = newl; Line(l_e4) = {{p_e4, p_e1}};
+// upper boundary
+l_u1 = newl; Line(l_u1) = {{p_u1, p_u2}};
+l_u2 = newl; Line(l_u2) = {{p_u2, p_u3}};
+l_u3 = newl; Line(l_u3) = {{p_u3, p_u4}};
+l_u4 = newl; Line(l_u4) = {{p_u4, p_u1}};
 // between external eletrode and GEM1
-l_eg1_u1 = newl; Line(l_eg1_u1) = {{p_e1, p_eg1_1}};
-l_eg1_u2 = newl; Line(l_eg1_u2) = {{p_e2, p_eg1_2}};
-l_eg1_u3 = newl; Line(l_eg1_u3) = {{p_e3, p_eg1_3}};
-l_eg1_u4 = newl; Line(l_eg1_u4) = {{p_e4, p_eg1_4}};
-l_eg1_l1 = newl; Line(l_eg1_l1) = {{p_eg1_1, p_g1_uc_h1_t1}};
-l_eg1_l2 = newl; Line(l_eg1_l2) = {{p_eg1_2, p_g1_uc_h2_t1}};
-l_eg1_l3 = newl; Line(l_eg1_l3) = {{p_eg1_3, p_g1_uc_h3_t1}};
-l_eg1_l4 = newl; Line(l_eg1_l4) = {{p_eg1_4, p_g1_uc_h4_t1}};
+l_ug1_u1 = newl; Line(l_ug1_u1) = {{p_u1, p_ug1_1}};
+l_ug1_u2 = newl; Line(l_ug1_u2) = {{p_u2, p_ug1_2}};
+l_ug1_u3 = newl; Line(l_ug1_u3) = {{p_u3, p_ug1_3}};
+l_ug1_u4 = newl; Line(l_ug1_u4) = {{p_u4, p_ug1_4}};
+l_ug1_l1 = newl; Line(l_ug1_l1) = {{p_ug1_1, p_g1_uc_h1_t1}};
+l_ug1_l2 = newl; Line(l_ug1_l2) = {{p_ug1_2, p_g1_uc_h2_t1}};
+l_ug1_l3 = newl; Line(l_ug1_l3) = {{p_ug1_3, p_g1_uc_h3_t1}};
+l_ug1_l4 = newl; Line(l_ug1_l4) = {{p_ug1_4, p_g1_uc_h4_t1}};
 // between GEM1 and GEM2
 l_g1g2_u1 = newl; Line(l_g1g2_u1) = {{p_g1_lc_h1_b1, p_g1g2_1}};
 l_g1g2_u2 = newl; Line(l_g1g2_u2) = {{p_g1_lc_h2_b1, p_g1g2_2}};
@@ -1678,57 +1678,57 @@ l_p2 = newl; Line(l_p2) = {{p_p2, p_p3}};
 l_p3 = newl; Line(l_p3) = {{p_p3, p_p4}};
 l_p4 = newl; Line(l_p4) = {{p_p4, p_p1}};
 /*---------------------------------- Curve Loop and Surface Definitions -------------------------------------*/
-// electrode plane
-cl_e = newll; Curve Loop(cl_e) = {{l_e1, l_e2, l_e3, l_e4}};
+// upper boundary plane
+cl_u = newll; Curve Loop(cl_u) = {{l_u1, l_u2, l_u3, l_u4}};
 // pad plane
 cl_p = newll; Curve Loop(cl_p) = {{l_p1, l_p2, l_p3, l_p4}};
 // side planes of gas volume
-cl_ep1 = newll; Curve Loop(cl_ep1) = {{
-    l_e1,
-    l_eg1_u2, l_eg1_l2, l_g1_uc_h2_tb1, l_g1_diel_h2_tm1, l_g1_diel_h2_mb1, l_g1_lc_h2_tb1,
+cl_up1 = newll; Curve Loop(cl_up1) = {{
+    l_u1,
+    l_ug1_u2, l_ug1_l2, l_g1_uc_h2_tb1, l_g1_diel_h2_tm1, l_g1_diel_h2_mb1, l_g1_lc_h2_tb1,
     l_g1g2_u2, l_g1g2_l2, l_g2_uc_h2_tb1, l_g2_diel_h2_tm1, l_g2_diel_h2_mb1, l_g2_lc_h2_tb1,
     l_g2g3_u2, l_g2g3_l2, l_g3_uc_h2_tb1, l_g3_diel_h2_tm1, l_g3_diel_h2_mb1, l_g3_lc_h2_tb1,
     l_g3p_u2, l_g3p_l2,
     -l_g3p_l1, -l_g3p_u1, -l_g3_lc_h1_tb1, -l_g3_diel_h1_mb1, -l_g3_diel_h1_tm1, -l_g3_uc_h1_tb1,
     -l_g2g3_l1, -l_g2g3_u1, -l_g2_lc_h1_tb1, -l_g2_diel_h1_mb1, -l_g2_diel_h1_tm1, -l_g2_uc_h1_tb1,
     -l_g1g2_l1, -l_g1g2_u1, -l_g1_lc_h1_tb1, -l_g1_diel_h1_mb1, -l_g1_diel_h1_tm1, -l_g1_uc_h1_tb1,
-    -l_eg1_l1, -l_eg1_u1,
+    -l_ug1_l1, -l_ug1_u1,
     -l_p1}};
-cl_ep2 = newll; Curve Loop(cl_ep2) = {{
-    l_e2,
-    l_eg1_u3, l_eg1_l3, l_g1_uc_h3_tb1, l_g1_diel_h3_tm1, l_g1_diel_h3_mb1, l_g1_lc_h3_tb1,
+cl_up2 = newll; Curve Loop(cl_up2) = {{
+    l_u2,
+    l_ug1_u3, l_ug1_l3, l_g1_uc_h3_tb1, l_g1_diel_h3_tm1, l_g1_diel_h3_mb1, l_g1_lc_h3_tb1,
     l_g1g2_u3, l_g1g2_l3, l_g2_uc_h3_tb1, l_g2_diel_h3_tm1, l_g2_diel_h3_mb1, l_g2_lc_h3_tb1,
     l_g2g3_u3, l_g2g3_l3, l_g3_uc_h3_tb1, l_g3_diel_h3_tm1, l_g3_diel_h3_mb1, l_g3_lc_h3_tb1,
     l_g3p_u3, l_g3p_l3,
     -l_g3p_l2, -l_g3p_u2, -l_g3_lc_h2_tb1, -l_g3_diel_h2_mb1, -l_g3_diel_h2_tm1, -l_g3_uc_h2_tb1,
     -l_g2g3_l2, -l_g2g3_u2, -l_g2_lc_h2_tb1, -l_g2_diel_h2_mb1, -l_g2_diel_h2_tm1, -l_g2_uc_h2_tb1,
     -l_g1g2_l2, -l_g1g2_u2, -l_g1_lc_h2_tb1, -l_g1_diel_h2_mb1, -l_g1_diel_h2_tm1, -l_g1_uc_h2_tb1,
-    -l_eg1_l2, -l_eg1_u2,
+    -l_ug1_l2, -l_ug1_u2,
     -l_p2}};
-cl_ep3 = newll; Curve Loop(cl_ep3) = {{
-    l_e3,
-    l_eg1_u4, l_eg1_l4, l_g1_uc_h4_tb1, l_g1_diel_h4_tm1, l_g1_diel_h4_mb1, l_g1_lc_h4_tb1,
+cl_up3 = newll; Curve Loop(cl_up3) = {{
+    l_u3,
+    l_ug1_u4, l_ug1_l4, l_g1_uc_h4_tb1, l_g1_diel_h4_tm1, l_g1_diel_h4_mb1, l_g1_lc_h4_tb1,
     l_g1g2_u4, l_g1g2_l4, l_g2_uc_h4_tb1, l_g2_diel_h4_tm1, l_g2_diel_h4_mb1, l_g2_lc_h4_tb1,
     l_g2g3_u4, l_g2g3_l4, l_g3_uc_h4_tb1, l_g3_diel_h4_tm1, l_g3_diel_h4_mb1, l_g3_lc_h4_tb1,
     l_g3p_u4, l_g3p_l4,
     -l_g3p_l3, -l_g3p_u3, -l_g3_lc_h3_tb1, -l_g3_diel_h3_mb1, -l_g3_diel_h3_tm1, -l_g3_uc_h3_tb1,
     -l_g2g3_l3, -l_g2g3_u3, -l_g2_lc_h3_tb1, -l_g2_diel_h3_mb1, -l_g2_diel_h3_tm1, -l_g2_uc_h3_tb1,
     -l_g1g2_l3, -l_g1g2_u3, -l_g1_lc_h3_tb1, -l_g1_diel_h3_mb1, -l_g1_diel_h3_tm1, -l_g1_uc_h3_tb1,
-    -l_eg1_l3, -l_eg1_u3,
+    -l_ug1_l3, -l_ug1_u3,
     -l_p3}};
-cl_ep4 = newll; Curve Loop(cl_ep4) = {{
-    l_e4,
-    l_eg1_u1, l_eg1_l1, l_g1_uc_h1_tb1, l_g1_diel_h1_tm1, l_g1_diel_h1_mb1, l_g1_lc_h1_tb1,
+cl_up4 = newll; Curve Loop(cl_up4) = {{
+    l_u4,
+    l_ug1_u1, l_ug1_l1, l_g1_uc_h1_tb1, l_g1_diel_h1_tm1, l_g1_diel_h1_mb1, l_g1_lc_h1_tb1,
     l_g1g2_u1, l_g1g2_l1, l_g2_uc_h1_tb1, l_g2_diel_h1_tm1, l_g2_diel_h1_mb1, l_g2_lc_h1_tb1,
     l_g2g3_u1, l_g2g3_l1, l_g3_uc_h1_tb1, l_g3_diel_h1_tm1, l_g3_diel_h1_mb1, l_g3_lc_h1_tb1,
     l_g3p_u1, l_g3p_l1,
     -l_g3p_l4, -l_g3p_u4, -l_g3_lc_h4_tb1, -l_g3_diel_h4_mb1, -l_g3_diel_h4_tm1, -l_g3_uc_h4_tb1,
     -l_g2g3_l4, -l_g2g3_u4, -l_g2_lc_h4_tb1, -l_g2_diel_h4_mb1, -l_g2_diel_h4_tm1, -l_g2_uc_h4_tb1,
     -l_g1g2_l4, -l_g1g2_u4, -l_g1_lc_h4_tb1, -l_g1_diel_h4_mb1, -l_g1_diel_h4_tm1, -l_g1_uc_h4_tb1,
-    -l_eg1_l4, -l_eg1_u4,
+    -l_ug1_l4, -l_ug1_u4,
     -l_p4}};
 // hole in surface by GEM1
-cl_ep1_g1 = newll;Curve Loop(cl_ep1_g1) = {{-l_g1_lc_h1_tb3,
+cl_up1_g1 = newll;Curve Loop(cl_up1_g1) = {{-l_g1_lc_h1_tb3,
     -l_g1_diel_h1_b3, -l_g1_diel_h1_mb3, -l_g1_diel_h1_tm3,
     l_g1_diel_h1_t3, -l_g1_uc_h1_tb3,
     l_g1_uc_h12_t1,
@@ -1736,7 +1736,7 @@ cl_ep1_g1 = newll;Curve Loop(cl_ep1_g1) = {{-l_g1_lc_h1_tb3,
     l_g1_diel_h2_tm2, l_g1_diel_h2_mb2, l_g1_diel_h2_b2,
     l_g1_lc_h2_tb2,
     -l_g1_lc_h12_b1}};
-cl_ep2_g1 = newll;Curve Loop(cl_ep2_g1) = {{-l_g1_lc_h2_tb3,
+cl_up2_g1 = newll;Curve Loop(cl_up2_g1) = {{-l_g1_lc_h2_tb3,
     -l_g1_diel_h2_b3, -l_g1_diel_h2_mb3, -l_g1_diel_h2_tm3,
     l_g1_diel_h2_t3, -l_g1_uc_h2_tb3,
     l_g1_uc_h23_t1,
@@ -1744,7 +1744,7 @@ cl_ep2_g1 = newll;Curve Loop(cl_ep2_g1) = {{-l_g1_lc_h2_tb3,
     l_g1_diel_h3_tm2, l_g1_diel_h3_mb2, l_g1_diel_h3_b2,
     l_g1_lc_h3_tb2,
     -l_g1_lc_h23_b1}};
-cl_ep3_g1 = newll;Curve Loop(cl_ep3_g1) = {{-l_g1_lc_h3_tb3,
+cl_up3_g1 = newll;Curve Loop(cl_up3_g1) = {{-l_g1_lc_h3_tb3,
     -l_g1_diel_h3_b3, -l_g1_diel_h3_mb3, -l_g1_diel_h3_tm3,
     l_g1_diel_h3_t3, -l_g1_uc_h3_tb3,
     l_g1_uc_h34_t1,
@@ -1752,7 +1752,7 @@ cl_ep3_g1 = newll;Curve Loop(cl_ep3_g1) = {{-l_g1_lc_h3_tb3,
     l_g1_diel_h4_tm2, l_g1_diel_h4_mb2, l_g1_diel_h4_b2,
     l_g1_lc_h4_tb2,
     -l_g1_lc_h34_b1}};
-cl_ep4_g1 = newll;Curve Loop(cl_ep4_g1) = {{-l_g1_lc_h4_tb3,
+cl_up4_g1 = newll;Curve Loop(cl_up4_g1) = {{-l_g1_lc_h4_tb3,
     -l_g1_diel_h4_b3, -l_g1_diel_h4_mb3, -l_g1_diel_h4_tm3,
     l_g1_diel_h4_t3, -l_g1_uc_h4_tb3,
     l_g1_uc_h41_t1,
@@ -1761,7 +1761,7 @@ cl_ep4_g1 = newll;Curve Loop(cl_ep4_g1) = {{-l_g1_lc_h4_tb3,
     l_g1_lc_h1_tb2,
     -l_g1_lc_h41_b1}};
 // hole in surface by GEM2
-cl_ep1_g2 = newll;Curve Loop(cl_ep1_g2) = {{-l_g2_lc_h1_tb3,
+cl_up1_g2 = newll;Curve Loop(cl_up1_g2) = {{-l_g2_lc_h1_tb3,
     -l_g2_diel_h1_b3, -l_g2_diel_h1_mb3, -l_g2_diel_h1_tm3,
     l_g2_diel_h1_t3, -l_g2_uc_h1_tb3,
     l_g2_uc_h12_t1,
@@ -1769,7 +1769,7 @@ cl_ep1_g2 = newll;Curve Loop(cl_ep1_g2) = {{-l_g2_lc_h1_tb3,
     l_g2_diel_h2_tm2, l_g2_diel_h2_mb2, l_g2_diel_h2_b2,
     l_g2_lc_h2_tb2,
     -l_g2_lc_h12_b1}};
-cl_ep2_g2 = newll;Curve Loop(cl_ep2_g2) = {{-l_g2_lc_h2_tb3,
+cl_up2_g2 = newll;Curve Loop(cl_up2_g2) = {{-l_g2_lc_h2_tb3,
     -l_g2_diel_h2_b3, -l_g2_diel_h2_mb3, -l_g2_diel_h2_tm3,
     l_g2_diel_h2_t3, -l_g2_uc_h2_tb3,
     l_g2_uc_h23_t1,
@@ -1777,7 +1777,7 @@ cl_ep2_g2 = newll;Curve Loop(cl_ep2_g2) = {{-l_g2_lc_h2_tb3,
     l_g2_diel_h3_tm2, l_g2_diel_h3_mb2, l_g2_diel_h3_b2,
     l_g2_lc_h3_tb2,
     -l_g2_lc_h23_b1}};
-cl_ep3_g2 = newll;Curve Loop(cl_ep3_g2) = {{-l_g2_lc_h3_tb3,
+cl_up3_g2 = newll;Curve Loop(cl_up3_g2) = {{-l_g2_lc_h3_tb3,
     -l_g2_diel_h3_b3, -l_g2_diel_h3_mb3, -l_g2_diel_h3_tm3,
     l_g2_diel_h3_t3, -l_g2_uc_h3_tb3,
     l_g2_uc_h34_t1,
@@ -1785,7 +1785,7 @@ cl_ep3_g2 = newll;Curve Loop(cl_ep3_g2) = {{-l_g2_lc_h3_tb3,
     l_g2_diel_h4_tm2, l_g2_diel_h4_mb2, l_g2_diel_h4_b2,
     l_g2_lc_h4_tb2,
     -l_g2_lc_h34_b1}};
-cl_ep4_g2 = newll;Curve Loop(cl_ep4_g2) = {{-l_g2_lc_h4_tb3,
+cl_up4_g2 = newll;Curve Loop(cl_up4_g2) = {{-l_g2_lc_h4_tb3,
     -l_g2_diel_h4_b3, -l_g2_diel_h4_mb3, -l_g2_diel_h4_tm3,
     l_g2_diel_h4_t3, -l_g2_uc_h4_tb3,
     l_g2_uc_h41_t1,
@@ -1794,7 +1794,7 @@ cl_ep4_g2 = newll;Curve Loop(cl_ep4_g2) = {{-l_g2_lc_h4_tb3,
     l_g2_lc_h1_tb2,
     -l_g2_lc_h41_b1}};
 // hole in surface by GEM2
-cl_ep1_g3 = newll;Curve Loop(cl_ep1_g3) = {{-l_g3_lc_h1_tb3,
+cl_up1_g3 = newll;Curve Loop(cl_up1_g3) = {{-l_g3_lc_h1_tb3,
     -l_g3_diel_h1_b3, -l_g3_diel_h1_mb3, -l_g3_diel_h1_tm3,
     l_g3_diel_h1_t3, -l_g3_uc_h1_tb3,
     l_g3_uc_h12_t1,
@@ -1802,7 +1802,7 @@ cl_ep1_g3 = newll;Curve Loop(cl_ep1_g3) = {{-l_g3_lc_h1_tb3,
     l_g3_diel_h2_tm2, l_g3_diel_h2_mb2, l_g3_diel_h2_b2,
     l_g3_lc_h2_tb2,
     -l_g3_lc_h12_b1}};
-cl_ep2_g3 = newll;Curve Loop(cl_ep2_g3) = {{-l_g3_lc_h2_tb3,
+cl_up2_g3 = newll;Curve Loop(cl_up2_g3) = {{-l_g3_lc_h2_tb3,
     -l_g3_diel_h2_b3, -l_g3_diel_h2_mb3, -l_g3_diel_h2_tm3,
     l_g3_diel_h2_t3, -l_g3_uc_h2_tb3,
     l_g3_uc_h23_t1,
@@ -1810,7 +1810,7 @@ cl_ep2_g3 = newll;Curve Loop(cl_ep2_g3) = {{-l_g3_lc_h2_tb3,
     l_g3_diel_h3_tm2, l_g3_diel_h3_mb2, l_g3_diel_h3_b2,
     l_g3_lc_h3_tb2,
     -l_g3_lc_h23_b1}};
-cl_ep3_g3 = newll;Curve Loop(cl_ep3_g3) = {{-l_g3_lc_h3_tb3,
+cl_up3_g3 = newll;Curve Loop(cl_up3_g3) = {{-l_g3_lc_h3_tb3,
     -l_g3_diel_h3_b3, -l_g3_diel_h3_mb3, -l_g3_diel_h3_tm3,
     l_g3_diel_h3_t3, -l_g3_uc_h3_tb3,
     l_g3_uc_h34_t1,
@@ -1818,7 +1818,7 @@ cl_ep3_g3 = newll;Curve Loop(cl_ep3_g3) = {{-l_g3_lc_h3_tb3,
     l_g3_diel_h4_tm2, l_g3_diel_h4_mb2, l_g3_diel_h4_b2,
     l_g3_lc_h4_tb2,
     -l_g3_lc_h34_b1}};
-cl_ep4_g3 = newll;Curve Loop(cl_ep4_g3) = {{-l_g3_lc_h4_tb3,
+cl_up4_g3 = newll;Curve Loop(cl_up4_g3) = {{-l_g3_lc_h4_tb3,
     -l_g3_diel_h4_b3, -l_g3_diel_h4_mb3, -l_g3_diel_h4_tm3,
     l_g3_diel_h4_t3, -l_g3_uc_h4_tb3,
     l_g3_uc_h41_t1,
@@ -1826,16 +1826,16 @@ cl_ep4_g3 = newll;Curve Loop(cl_ep4_g3) = {{-l_g3_lc_h4_tb3,
     l_g3_diel_h1_tm2, l_g3_diel_h1_mb2, l_g3_diel_h1_b2,
     l_g3_lc_h1_tb2,
     -l_g3_lc_h41_b1}};
-s_e = news; Plane Surface(s_e) = {{cl_e}};
+s_u = news; Plane Surface(s_u) = {{cl_u}};
 s_p = news; Plane Surface(s_p) = {{cl_p}};
-s_ep1 = news; Plane Surface(s_ep1) = {{cl_ep1, cl_ep1_g1, cl_ep1_g2, cl_ep1_g3}};
-s_ep2 = news; Plane Surface(s_ep2) = {{cl_ep2, cl_ep2_g1, cl_ep2_g2, cl_ep2_g3}};
-s_ep3 = news; Plane Surface(s_ep3) = {{cl_ep3, cl_ep3_g1, cl_ep3_g2, cl_ep3_g3}};
-s_ep4 = news; Plane Surface(s_ep4) = {{cl_ep4, cl_ep4_g1, cl_ep4_g2, cl_ep4_g3}};
+s_up1 = news; Plane Surface(s_up1) = {{cl_up1, cl_up1_g1, cl_up1_g2, cl_up1_g3}};
+s_up2 = news; Plane Surface(s_up2) = {{cl_up2, cl_up2_g1, cl_up2_g2, cl_up2_g3}};
+s_up3 = news; Plane Surface(s_up3) = {{cl_up3, cl_up3_g1, cl_up3_g2, cl_up3_g3}};
+s_up4 = news; Plane Surface(s_up4) = {{cl_up4, cl_up4_g1, cl_up4_g2, cl_up4_g3}};
 /*---------------------------------- Surface Loop and Volume Definitions -------------------------------------*/
-sl_ep = newsl; Surface Loop(sl_ep) = {{
-    s_e, s_p,
-    s_ep1, s_ep2, s_ep3, s_ep4,
+sl_up = newsl; Surface Loop(sl_up) = {{
+    s_u, s_p,
+    s_up1, s_up2, s_up3, s_up4,
     s_g1_uc_t1,
     s_g1_uc_h1_tb1, s_g1_uc_h2_tb1, s_g1_uc_h3_tb1, s_g1_uc_h4_tb1,
     s_g1_uc_h5_tb1, s_g1_uc_h5_tb2, s_g1_uc_h5_tb3, s_g1_uc_h5_tb4,
@@ -1879,13 +1879,13 @@ sl_ep = newsl; Surface Loop(sl_ep) = {{
     s_g3_diel_h1_b1, s_g3_diel_h2_b1, s_g3_diel_h3_b1, s_g3_diel_h4_b1,
     s_g3_diel_h5_b1, s_g3_diel_h5_b2, s_g3_diel_h5_b3, s_g3_diel_h5_b4}};
 
-v_ep = newv; Volume(v_ep) = {{sl_ep}};
+v_up = newv; Volume(v_up) = {{sl_up}};
 // ---------------------------------------------------------------------------------------------------------------
 // Physical volumes and surfaces
 // ---------------------------------------------------------------------------------------------------------------
 /*---------------------------------- Physical volume definitions -------------------------------------*/
 // gas
-pv_ep = newv; Physical Volume(pv_ep) = {{v_ep}}; // Body 1
+pv_up = newv; Physical Volume(pv_up) = {{v_up}}; // Body 1
 // upper, lower copper and dielectric layers of GEM1, 2, 3
 pv_g1_uc = newv; Physical Volume(pv_g1_uc) = {{v_g1_uc}}; // Body 2
 pv_g1_lc = newv; Physical Volume(pv_g1_lc) = {{v_g1_lc}}; // Body 3
@@ -1897,9 +1897,9 @@ pv_g3_uc = newv; Physical Volume(pv_g3_uc) = {{v_g3_uc}}; // Body 8
 pv_g3_lc = newv; Physical Volume(pv_g3_lc) = {{v_g3_lc}}; // Body 9
 pv_g3_diel = newv; Physical Volume(pv_g3_diel) = {{v_g3_diel}}; // Body 10
 /*---------------------------------- Physical surface definitions for boundary conditions -------------------------------------*/
-// external extrode
+// upper boundary plane
 // Boundary 1
-ps_e = news; Physical Surface(ps_e) = {{s_e}};
+ps_u = news; Physical Surface(ps_u) = {{s_u}};
 // Boundary 2
 ps_g1_uc = news; Physical Surface(ps_g1_uc) = {{s_g1_uc_t1,
     s_g1_uc_h1_tb1, s_g1_uc_h2_tb1, s_g1_uc_h3_tb1, s_g1_uc_h4_tb1,
@@ -1943,25 +1943,25 @@ ps_p = news; Physical Surface(ps_p) = {{s_p}};
 // surfaces for periodic boundary conditions
 // Boundary 9
 ps_per_xmin = news; Physical Surface(ps_per_xmin) = {{
-    s_ep1,
+    s_up1,
     s_g1_uc_h12_tb1, s_g1_diel_h12_tb1, s_g1_lc_h12_tb1,
     s_g2_uc_h12_tb1, s_g2_diel_h12_tb1, s_g2_lc_h12_tb1,
     s_g3_uc_h12_tb1, s_g3_diel_h12_tb1, s_g3_lc_h12_tb1}};  
 // Boundary 10
 ps_per_xmax = news; Physical Surface(ps_per_xmax) = {{
-    s_ep3,
+    s_up3,
     s_g1_uc_h34_tb1, s_g1_diel_h34_tb1, s_g1_lc_h34_tb1,
     s_g2_uc_h34_tb1, s_g2_diel_h34_tb1, s_g2_lc_h34_tb1,
     s_g3_uc_h34_tb1, s_g3_diel_h34_tb1, s_g3_lc_h34_tb1}};
 // Boundary 11
 ps_per_ymin = news; Physical Surface(ps_per_ymin) = {{
-    s_ep4,
+    s_up4,
     s_g1_uc_h41_tb1, s_g1_diel_h41_tb1, s_g1_lc_h41_tb1,
     s_g2_uc_h41_tb1, s_g2_diel_h41_tb1, s_g2_lc_h41_tb1,
     s_g3_uc_h41_tb1, s_g3_diel_h41_tb1, s_g3_lc_h41_tb1}};
 // Boundary 12
 ps_per_ymax = news; Physical Surface(ps_per_ymax) = {{
-    s_ep2,
+    s_up2,
     s_g1_uc_h23_tb1, s_g1_diel_h23_tb1, s_g1_lc_h23_tb1,
     s_g2_uc_h23_tb1, s_g2_diel_h23_tb1, s_g2_lc_h23_tb1,
     s_g3_uc_h23_tb1, s_g3_diel_h23_tb1, s_g3_lc_h23_tb1}};  

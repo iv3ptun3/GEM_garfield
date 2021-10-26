@@ -10,7 +10,7 @@ $Edrift = {E_DRIFT}
 $Etrans = {E_TRANS}
 $Einduct = {E_INDUCTION}
 $dzP = {DZ_PADPLANE}
-$dzE = {DZ_ELECTRODE}
+$dzU = {DZ_UPPERPLANE}
 $dz12 = {DZ_GEM12}
 $dz23 = {DZ_GEM23}
 $dV1 = {DV_GEM1}
@@ -25,7 +25,7 @@ $v_lc2 = v_uc3 - Etrans*(dz23 - tD)
 $v_uc2 = v_lc2 - dV2
 $v_lc1 = v_uc2 - Etrans*(dz12 - tD)
 $v_uc1 = v_lc1 - dV1
-$vE = v_uc1 - Edrift*(dzE  - tD/2)
+$vE = v_uc1 - Edrift*(dzU  - tD/2)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Simulation
   Coordinate System = Cartesian 3D
