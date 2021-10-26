@@ -57,6 +57,14 @@
 # |   \/
 # ---------------------------------- pad plane(z = 0)
 
+# script prefix
+SCRIPT_NAME tgemcell
+
+# relative permitivity of materials
+PER_GAS         1
+PER_COPPER      1e10
+PER_INSULATOR   3.5
+
 # GEM dimensions
 R_INNER         0.0025
 R_OUTER         0.0035

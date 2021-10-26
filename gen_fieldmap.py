@@ -4,17 +4,28 @@
 import os
 import sys
 sys.path.append("./pysource/")
+import parManager as pr
 
-if len(sys.argv) != 1 or "--help" in sys.argv:
-    print("Usage : python3 gen_fieldmap")
+if len(sys.argv) != 2 or "--help" in sys.argv:
+    print("Usage : python3 gen_fieldmap [parameter file name]")
     exit()
 
+# loading parameters
+reader = pr.ParManager.instance(True)
+reader.initPars(sys.argv[1])
+scriptName = reader.getPar("SCRIPT_NAME")
+
+path = "./" + scriptName
+if not os.path.exists(path):    
+    os.system("mkdir " + scriptName)
+
+# running commands
 print("3D Meshing geometry file using Gmsh..., ", end="")
-os.system("gmsh tgemcell.geo -3 -order 2 >> tgemcell/log_geo.txt")
-print("Done. Logs are saved as tgemcell/log_geo.txt file")
+os.system("gmsh " + scriptName + ".geo -3 -order 2 >> " + scriptName + "/log_geo.txt")
+print("Done. Logs are saved as " + scriptName + "/log_geo.txt file")
 print("Griding mesh file using ElmerGrid..., ", end="")
-os.system("ElmerGrid 14 2 tgemcell.msh -autoclean >> tgemcell/log_grd.txt")
-print("Done. Logs are saved as tgemcell/log_grd.txt file")
+os.system("ElmerGrid 14 2 " + scriptName + ".msh -autoclean >> " + scriptName + "/log_grd.txt")
+print("Done. Logs are saved as " + scriptName + "/log_grd.txt file")
 print("Solving field equation using ElmerSolver..., ", end="")
-os.system("ElmerSolver tgemcell.sif >> tgemcell/log_sol.txt")
-print("Done. Logs are saved as tgemcell/log_sol.txt file")
+os.system("ElmerSolver " + scriptName + ".sif >> " + scriptName + "/log_sol.txt")
+print("Done. Logs are saved as " + scriptName + "/log_sol.txt file")

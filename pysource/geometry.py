@@ -1,5 +1,5 @@
 # this modules contains geometry and start information file(.sif for ElmerSolver) where parameters are replaced with the python-type format
-tgemcell_geo = """// All length quantities are in cm.
+geometry_txt = """// All length quantities are in cm.
 rI = {R_INNER}; // inner hole radius
 rO = {R_OUTER}; // outer hole radius
 rE = {R_ETCH}; // etch mount(= cupper hole radius > rO(hole radius on dielectric layer)) 

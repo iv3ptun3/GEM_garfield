@@ -12,7 +12,7 @@ class ParManager:
             ParManager.__instance = cls
             ParManager.__printPars = print
     @classmethod
-    def instance(cls, print = True):
+    def instance(cls, print = False):
         if ParManager.__instance == None:
             ParManager.__instance = cls(print)
         else:

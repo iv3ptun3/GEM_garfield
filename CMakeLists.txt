@@ -23,7 +23,6 @@ target_include_directories(view_tgem PRIVATE ${PROJECT_SOURCE_DIR}/include/)
 # ---Copy all files locally to the build directory-------------------------------
 foreach(_file
   gen_fieldmap.py gen_scripts.py params.txt 
-  pysource/parManager.py pysource/tgemcell_geo.py pysource/tgemcell_sif.py
-  tgemcell/dielectrics.dat)
+  pysource/parManager.py pysource/geometry.py pysource/startinfo.py pysource/dielectrics.py)
   configure_file(${_file} ${CMAKE_CURRENT_BINARY_DIR}/${_file} COPYONLY)
 endforeach()
