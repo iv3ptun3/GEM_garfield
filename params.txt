@@ -91,10 +91,15 @@ MSIZE_DIEL_INNER_HOLE       0.0010
 MSIZE_DIEL_OUTER_HOLE       0.0015
 MSIZE_HOLE_CENTER           0.0025
 
-# Electric field density
+# Electric field
 E_TRANS             1000
 E_DRIFT             1000
 E_INDUCTION         1000
+
+# Magnetic field ()
+B_X                 0.
+B_Y                 0.
+B_Z                 1.
 
 # Voltage differences between copper layers of GEMs
 DV_GEM1             300

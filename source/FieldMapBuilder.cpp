@@ -26,12 +26,14 @@ MediumMagboltz* FieldMapBuilder::initGas()
 
 ComponentAnalyticField* FieldMapBuilder::buildDriftFieldMap()
 {
+    auto parMan = ParManager::getInstance();
     if(fGas == nullptr)
     {
         printError("FieldMapBuilder", "buildDriftFieldMap()", "fGas is a null pointer.");
         return nullptr;
     }
     ComponentAnalyticField* fm = new ComponentAnalyticField();
+    setMagneticField(fm, parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
     return fm;
 }
 
@@ -52,6 +54,7 @@ ComponentElmer* FieldMapBuilder::buildGemFieldMap()
         if (eps == 1.)
             fm->SetMedium(i, fGas);
     }
+    setMagneticField(fm, parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
     fm->PrintMaterials();
     return fm;
 }
