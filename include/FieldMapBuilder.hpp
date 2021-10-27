@@ -14,7 +14,7 @@ class FieldMapBuilder{
     public:
         FieldMapBuilder():fGas(nullptr), fMagneticFieldOn(false){}
         
-        ~FieldMapBuilder()
+        virtual ~FieldMapBuilder()
         {
             if(fGas != nullptr)
                 delete fGas;

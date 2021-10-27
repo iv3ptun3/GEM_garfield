@@ -15,7 +15,7 @@ using namespace Garfield;
 class TGemViewerDrift : public TGemViewerBase{
     public:
         TGemViewerDrift(ComponentFieldMap *fm);
-        ~TGemViewerDrift();
+        virtual ~TGemViewerDrift();
         void setAvalancheArea(double xmin, double ymin, double zmin, double xmax, double ymax, double zmax)
         {
             fSensor->SetArea(xmin, ymin, zmin, xmax, ymax, zmax);

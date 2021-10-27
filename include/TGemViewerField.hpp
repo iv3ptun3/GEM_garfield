@@ -12,7 +12,7 @@ using namespace Garfield;
 class TGemViewerField : public TGemViewerBase{
     public:
         TGemViewerField(ComponentFieldMap *fm);
-        ~TGemViewerField();
+        virtual ~TGemViewerField();
         void setNumberOfContour(int n){((ViewField*)fFieldViewer)->SetNumberOfContours(n);}
         void setVoltageRange(double vmin, double vmax){fFieldViewer->SetVoltageRange(vmin, vmax);}
         // option : quantity to be plotted(will be passed to Garfield::ViewField::PlotContour()).

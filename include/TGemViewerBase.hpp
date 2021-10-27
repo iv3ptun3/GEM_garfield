@@ -12,7 +12,7 @@ class TGemViewerBase{
         TGemViewerBase(ComponentFieldMap *fm)
         :fCanvas(nullptr), fNx(0), fNy(-1), fNz(0), fx0(0), fy0(0), fz0(0)
         {}
-        ~TGemViewerBase(){};
+        virtual ~TGemViewerBase(){};
         void setViewPlane(double fx, double fy, double fz, double x0, double y0, double z0)
         {
             fNx = fx;
