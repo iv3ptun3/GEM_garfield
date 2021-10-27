@@ -24,12 +24,17 @@ using namespace Garfield;
 
 int main(int argc, char *argv[])
 {
-    TApplication app("app", &argc, argv);
-    
+    if(argc != 2)
+    {
+        std::cout << "Usage : view_tgem [parameter file]" << std::endl;
+        return 0;
+    }
     // Initializing global managers.
     auto parMan = ParManager::getInstance();
-    parMan->initPars("params.txt");
+    parMan->initPars(argv[1]);
     // parMan->listPars();
+
+    TApplication app("app", &argc, argv);
 
     // tripple gem dimension
     const double pitch = parMan->getParD("PITCH");
@@ -46,6 +51,7 @@ int main(int argc, char *argv[])
     const double eTrans = parMan->getParD("E_TRANS");
     const double eDrift = parMan->getParD("E_DRIFT");
     const double eInduction = parMan->getParD("E_INDUCTION");
+    // get a field map from the builder
     FieldMapBuilder* fmBuilder = new FieldMapBuilder();
     fmBuilder->initGas();
     ComponentElmer* fm = fmBuilder->buildGemFieldMap();
