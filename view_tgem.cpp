@@ -18,14 +18,19 @@
 #include "TGemViewerField.hpp"
 #include "TGemViewerDrift.hpp"
 #include "ParManager.hpp"
+#include "FieldMapBuilder.hpp"
 
 using namespace Garfield;
 
 int main(int argc, char *argv[])
 {
     TApplication app("app", &argc, argv);
+    
+    // Initializing global managers.
     auto parMan = ParManager::getInstance();
     parMan->initPars("params.txt");
+    // parMan->listPars();
+
     // tripple gem dimension
     const double pitch = parMan->getParD("PITCH");
     const double tD = parMan->getParD("T_DIEL");
@@ -41,40 +46,11 @@ int main(int argc, char *argv[])
     const double eTrans = parMan->getParD("E_TRANS");
     const double eDrift = parMan->getParD("E_DRIFT");
     const double eInduction = parMan->getParD("E_INDUCTION");
-    // parMan->listPars();
+    FieldMapBuilder* fmBuilder = new FieldMapBuilder();
+    fmBuilder->initGas();
+    ComponentElmer* fm = fmBuilder->buildGemFieldMap();
 
-    // Load the field map.
-    ComponentElmer fm(
-        "tgemcell/mesh.header", "tgemcell/mesh.elements", "tgemcell/mesh.nodes",
-        "tgemcell/dielectrics.dat", "tgemcell/tgemcell.result", "cm");
-    fm.EnablePeriodicityX();
-    fm.EnablePeriodicityY();
-    fm.PrintRange();
-
-    // Setup the gas.
-    MediumMagboltz gas;
-    gas.SetComposition("ar", 80., "co2", 20.);
-    gas.SetTemperature(293.15);
-    gas.SetPressure(760.);
-    gas.Initialise(true);
-    // Set the Penning transfer efficiency.
-    constexpr double rPenning = 0.51;
-    constexpr double lambdaPenning = 0.;
-    gas.EnablePenningTransfer(rPenning, lambdaPenning, "ar");
-    // Load the ion mobilities.
-    const std::string path = std::getenv("GARFIELD_INSTALL");
-    gas.LoadIonMobility(path + "/share/Garfield/Data/IonMobility_Ar+_Ar.txt");
-    // Associate the gas with the corresponding field map material.
-    const unsigned int nMaterials = fm.GetNumberOfMaterials();
-    for (unsigned int i = 0; i < nMaterials; ++i)
-    {
-        const double eps = fm.GetPermittivity(i);
-        if (eps == 1.)
-            fm.SetMedium(i, &gas);
-    }
-    fm.PrintMaterials();
-
-    TGemViewerField *fv = new TGemViewerField(&fm);
+    TGemViewerField *fv = new TGemViewerField(fm);
     TCanvas *cf1 = new TCanvas("cf1", "Potential plot of GEM1", 600, 600);
     TCanvas *cf2 = new TCanvas("cf2", "Potential plot of GEM2", 600, 600);
     TCanvas *cf3 = new TCanvas("cf3", "Potential plot of GEM3", 600, 600);
@@ -111,7 +87,7 @@ int main(int argc, char *argv[])
     cd3->SetLeftMargin(0.16);    
     cd4->SetLeftMargin(0.16);    
 
-    TGemViewerDrift *dv = new TGemViewerDrift(&fm);
+    TGemViewerDrift *dv = new TGemViewerDrift(fm);
     dv->setAvalancheArea(-3*pitch, -3*sqrt(3.)*pitch, 0, 3*pitch, 3*sqrt(3)*pitch, dZp + dZ12 + dZ23 + dZe);
     dv->avalancheElectron(0, 0, dZp + dZ12 + dZ23 + dZe/2, 0.1, 0., 2);
     dv->setCanvas(cd1);

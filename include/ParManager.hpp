@@ -9,6 +9,7 @@ using namespace std;
 
 class ParManager{
     public:
+        ~ParManager();
         static ParManager* getInstance();
         static void initPars(const string fileName);
         double getParD(const string parName) const;

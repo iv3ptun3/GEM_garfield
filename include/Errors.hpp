@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-void printError(
+static void printError(
     const std::string cls, const std::string method, const std::string message)
 {
     std::cerr << "-------------------------------------------------------------------" << std::endl;

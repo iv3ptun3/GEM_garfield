@@ -8,7 +8,8 @@ endif()
 # ########################################################################################
 
 # ---Build executable------------------------------------------------------------
-set(SOURCES source/ParManager.cpp source/TGemViewerField.cpp source/TGemViewerDrift.cpp)
+set(SOURCES source/ParManager.cpp source/TGemViewerField.cpp source/TGemViewerDrift.cpp
+  source/FieldMapBuilder.cpp)
 
 add_executable(tgem tgem.cpp ${SOURCES})
 add_executable(view_tgem view_tgem.cpp ${SOURCES})

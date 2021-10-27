@@ -9,6 +9,12 @@
 ParManager* ParManager::fInstance = nullptr;
 unordered_map<string, string> ParManager::fParMap = std::unordered_map<string, string>();
 
+ParManager::~ParManager()
+{
+    fInstance = nullptr;
+    fParMap.clear();
+}
+
 ParManager* ParManager::getInstance()
 {
     if(fInstance == nullptr)
@@ -69,8 +75,8 @@ std::string ParManager::getParS(const string parName) const
     auto it = fParMap.find(parName);
     if(it == fParMap.end())
     {
-        cout << "In ParManager::getParS(string parName)." << endl;
-        cout << "Error : Cannot find parameter " << parName << "." << endl;
+        std::string message = "A parameter " + parName + " is not registered.";
+        printError("ParManager", "getParS(const string)", message);
         return "";
     }
     return it->second;
