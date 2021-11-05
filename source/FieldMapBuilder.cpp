@@ -33,17 +33,25 @@ ComponentAnalyticField* FieldMapBuilder::buildDriftFieldMap()
         return nullptr;
     }
     ComponentAnalyticField* fm = new ComponentAnalyticField();
-    setMagneticField(fm, parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
+    fm->SetMagneticField(parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
     return fm;
 }
 
 ComponentElmer* FieldMapBuilder::buildGemFieldMap()
 {
     auto parMan = ParManager::getInstance();
-    std::string path = parMan->getParS("SCRIPT_NAME");
+    string script = parMan->getParS("SCRIPT_NAME");
+    
+    // get an absolute path to executable.
+    char buffer[1024];
+    ssize_t length = readlink("/proc/self/exe", buffer, sizeof(buffer)/sizeof(char));
+    buffer[length] = '\0';
+    std::string path = buffer;
+    path = path.substr(0, path.find_last_of('/') + 1) + script;
+    std::cout << path << std::endl;
     ComponentElmer* fm = new ComponentElmer(
         path + "/mesh.header", path + "/mesh.elements", path + "/mesh.nodes",
-        path + "/dielectrics.dat", path + "/" + path + ".result", "cm");
+        path + "/dielectrics.dat", path + "/" + script + ".result", "cm");
     fm->EnablePeriodicityX();
     fm->EnablePeriodicityY();
     // Associate the gas with the corresponding field map material.
@@ -54,7 +62,7 @@ ComponentElmer* FieldMapBuilder::buildGemFieldMap()
         if (eps == 1.)
             fm->SetMedium(i, fGas);
     }
-    setMagneticField(fm, parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
+    fm->SetMagneticField(parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
     fm->EnableConvergenceWarnings(false);
     fm->PrintMaterials();
     return fm;
