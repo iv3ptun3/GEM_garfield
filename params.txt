@@ -102,15 +102,15 @@ B_Y                 0.
 B_Z                 1.
 
 # Voltage differences between copper layers of GEMs
-DV_GEM1             300
-DV_GEM2             300
-DV_GEM3             300
+DV_GEM1             320
+DV_GEM2             320
+DV_GEM3             320
 
 # Gas configuration
 GAS_MEDIUM          he
 GAS_MEDIUM_FRAC     80.
 # iso butane
-GAS_QUANCHING       ich4h10
+GAS_QUANCHING       ic4h10
 GAS_QUANCHING_FRAC  20.
 GAS_PRESSURE        760.
 GAS_TEMPERATURE     293.15
