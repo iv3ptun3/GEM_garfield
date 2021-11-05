@@ -18,6 +18,6 @@ Requirements = machine =!= "kunpl07"
 Notify_user  = simpson9794@korea.ac.kr
 Queue
 EOF
-exit
-condor_submit $subfile
-rm $subfile
+
+condor_submit ${1}/$subfile.sub
+rm ${1}/$subfile.sub
