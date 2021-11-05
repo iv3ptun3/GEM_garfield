@@ -21,6 +21,7 @@ MediumMagboltz* FieldMapBuilder::initGas()
         parMan->getParS("GAS_MEDIUM"));
     const std::string path = std::getenv("GARFIELD_INSTALL");
     fGas->LoadIonMobility(path + parMan->getParS("GAS_ION_MOBILITY"));
+    fGas->SetMaxElectronEnergy(200);
     return fGas;
 }
 
