@@ -55,6 +55,7 @@ ComponentElmer* FieldMapBuilder::buildGemFieldMap()
             fm->SetMedium(i, fGas);
     }
     setMagneticField(fm, parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
+    fm->EnableConvergenceWarnings(false);
     fm->PrintMaterials();
     return fm;
 }

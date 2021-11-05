@@ -20,8 +20,7 @@ class FieldMapBuilder{
                 delete fGas;
         }
 
-        void enableMagneticField(){fMagneticFieldOn = true;}
-        void disableMagneticField(){fMagneticFieldOn = false;}
+        void enableMagneticField(bool magneticField = true){fMagneticFieldOn = magneticField;}
 
         MediumMagboltz* getGas(){return fGas;}
         MediumMagboltz* initGas();
