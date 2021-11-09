@@ -76,7 +76,8 @@ int main(int argc, char *argv[])
     AvalancheMC drift;
     drift.SetSensor(&sensor);
     drift.SetDistanceSteps(2.e-4);
-
+    drift.EnableMagneticField(true);
+    
     TrackClustersPtr clusters;
     allocateTrackClustersPtr(&clusters, nEvt);
     clusters.evtId = 0;
