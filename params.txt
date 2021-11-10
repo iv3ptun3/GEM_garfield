@@ -96,7 +96,7 @@ E_TRANS             1000
 E_DRIFT             1000
 E_INDUCTION         1000
 
-# Magnetic field ()
+# Magnetic field
 B_X                 0.
 B_Y                 0.
 B_Z                 1.
@@ -106,13 +106,26 @@ DV_GEM1             320
 DV_GEM2             320
 DV_GEM3             320
 
+# SRIM data file
+SRIM/he_iC4H10_90_10_380.txt
+
 # Gas configuration
 GAS_MEDIUM          he
-GAS_MEDIUM_FRAC     80.
+GAS_MEDIUM_FRAC     90.
+GAS_MEDIUM_A        4.003
+GAS_MEDIUM_Z        2.
+GAS_MEDIUM_FANO     0.2
+GAS_MEDIUM_WORK     43.2
+
 # iso butane
 GAS_QUENCHING       ic4h10
-GAS_QUENCHING_FRAC  20.
-GAS_PRESSURE        760.
+GAS_QUENCHING_FRAC  10.
+GAS_QUENCHING_A     58.12
+GAS_QUENCHING_Z     34.
+GAS_QUENCHING_FANO  0.28
+GAS_QUENCHING_WORK  23.
+
+GAS_PRESSURE        380.
 GAS_TEMPERATURE     293.15
 GAS_PENNING_EFF     0.51
 GAS_PENNING_LAMB    0.
