@@ -1,7 +1,7 @@
 #ifndef FIELDMAPBUILDER_HPP
 #define FIELDMAPBUILDER_HPP
 
-#include "Garfield/ComponentAnalyticField.hh"
+#include "Garfield/ComponentConstant.hh"
 #include "Garfield/ComponentElmer.hh"
 #include "Garfield/MediumMagboltz.hh"
 
@@ -23,7 +23,7 @@ class FieldMapBuilder{
         MediumMagboltz* getGas(){return fGas;}
         MediumMagboltz* initGas();
         // return ptr to ComponentFieldMap of drift field or tripple GEM field.
-        ComponentAnalyticField* buildDriftFieldMap();
+        ComponentConstant* buildDriftFieldMap();
         ComponentElmer* buildGemFieldMap();
     private:
     private:
