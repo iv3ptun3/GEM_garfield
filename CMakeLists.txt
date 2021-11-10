@@ -17,8 +17,7 @@ add_executable(view_tgem view_tgem.cpp ${SOURCES})
 target_link_libraries(tgem Garfield::Garfield ${ROOT_LIBRARIES})
 target_link_libraries(view_tgem Garfield::Garfield ${ROOT_LIBRARIES})
 
-target_include_directories(tgem PRIVATE ${PROJECT_SOURCE_DIR}/include/)
-target_include_directories(view_tgem PRIVATE ${PROJECT_SOURCE_DIR}/include/)
+include_directories(${PROJECT_SOURCE_DIR}/include/)
 
 # ---Copy all files locally to the build directory-------------------------------
 foreach(_file
