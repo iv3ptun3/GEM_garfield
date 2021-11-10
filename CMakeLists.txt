@@ -9,8 +9,7 @@ find_package(ROOT REQUIRED)
 # ########################################################################################
 
 # ---Build executable------------------------------------------------------------
-set(SOURCES source/ParManager.cpp source/TGemViewerField.cpp source/TGemViewerDrift.cpp
-  source/FieldMapBuilder.cpp)
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} source/*.cpp)
 
 add_executable(tgem tgem.cpp ${SOURCES})
 add_executable(view_tgem view_tgem.cpp ${SOURCES})
@@ -20,7 +19,6 @@ target_link_libraries(view_tgem Garfield::Garfield ${ROOT_LIBRARIES})
 
 target_include_directories(tgem PRIVATE ${PROJECT_SOURCE_DIR}/include/)
 target_include_directories(view_tgem PRIVATE ${PROJECT_SOURCE_DIR}/include/)
-
 
 # ---Copy all files locally to the build directory-------------------------------
 foreach(_file
