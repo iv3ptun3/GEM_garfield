@@ -38,12 +38,6 @@ int main(int argc, char *argv[])
     parMan->initPars(argv[1]);
     // parMan->listPars();
 
-    // get a field map from the builder
-    FieldMapBuilder *fmBuilder = new FieldMapBuilder();
-    fmBuilder->initGas();
-    // ComponentElmer *fm1 = fmBuilder->buildGemFieldMap();
-    ComponentConstant *fm2 = fmBuilder->buildDriftFieldMap();
-
     // tripple gem dimension
     const double pitch = parMan->getParD("PITCH");
     const double tD = parMan->getParD("T_DIEL");
@@ -52,31 +46,31 @@ int main(int argc, char *argv[])
     const double dZ23 = parMan->getParD("DZ_GEM23");
     const double dZu = parMan->getParD("DZ_UPPERPLANE");
     const double dZe = parMan->getParD("DZ_ELECTRODE");
-
     const double tpcX = parMan->getParD("TPC_X");
     const double tpcY = parMan->getParD("TPC_Y");
-    // voltage
-    const double dvg1 = parMan->getParD("DV_GEM1");
-    const double dvg2 = parMan->getParD("DV_GEM2");
-    const double dvg3 = parMan->getParD("DV_GEM3");
-    // electric field density
-    const double eTrans = parMan->getParD("E_TRANS");
-    const double eDrift = parMan->getParD("E_DRIFT");
-    const double eInduction = parMan->getParD("E_INDUCTION");
+
+    // get a field map from the builder
+    FieldMapBuilder *fmBuilder = new FieldMapBuilder();
+    fmBuilder->initGas();
+    // ComponentElmer *fm1 = fmBuilder->buildGemFieldMap();
+    ComponentConstant *fm2 = fmBuilder->buildDriftFieldMap();
+    ComponentConstant *fm3 = fmBuilder->buildMagneticField();
 
     // Create the sensor.
     Sensor sensor;
     // sensor.AddComponent(fm1);
     sensor.AddComponent(fm2);
+    sensor.AddComponent(fm3);
     sensor.SetArea(-tpcX / 2, -tpcY / 2, 0, tpcX / 2, tpcY / 2, dZp + dZ12 + dZ23 + dZu + dZe);
     
     AvalancheMicroscopic aval;
     aval.SetSensor(&sensor);
     aval.EnableMagneticField(magneticFieldOn);
-    aval.SetCollisionSteps(1000);
+    
     AvalancheMC drift;
     drift.SetSensor(&sensor);
     drift.SetDistanceSteps(2.e-4);
+    drift.EnableMagneticField(magneticFieldOn);
 
     // build TrackSrim instance
     SrimTrackBuilder stBuilder(parMan->getParS("SRIM_DATA"));

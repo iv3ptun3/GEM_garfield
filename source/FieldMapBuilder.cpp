@@ -53,7 +53,6 @@ ComponentConstant* FieldMapBuilder::buildDriftFieldMap()
     fm->SetMedium(fGas);
     fm->SetGeometry(geo);
     fm->SetElectricField(0., 0., parMan->getParD("E_DRIFT"));
-    fm->SetMagneticField(parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
     return fm;
 }
 
@@ -82,8 +81,34 @@ ComponentElmer* FieldMapBuilder::buildGemFieldMap(const bool print)
         if (eps == 1.)
             fm->SetMedium(i, fGas);
     }
-    fm->SetMagneticField(parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
     fm->EnableConvergenceWarnings(false);
     fm->PrintMaterials();
+    return fm;
+}
+
+ComponentConstant* FieldMapBuilder::buildMagneticField()
+{
+    auto parMan = ParManager::getInstance();
+    if(fGas == nullptr)
+    {
+        printError("FieldMapBuilder", "buildDriftFieldMap()", "fGas is a null pointer.");
+        return nullptr;
+    }
+    const double tpcX = parMan->getParD("TPC_X");
+    const double tpcY = parMan->getParD("TPC_Y");
+    const double dZp = parMan->getParD("DZ_PADPLANE");
+    const double dZ12 = parMan->getParD("DZ_GEM12");
+    const double dZ23 = parMan->getParD("DZ_GEM23");
+    const double dZu = parMan->getParD("DZ_UPPERPLANE");
+    const double dZe = parMan->getParD("DZ_ELECTRODE");
+    // define constant magnetic field region as simple box
+    SolidBox *box = new SolidBox(-tpcX / 2, -tpcY / 2, 0., tpcX, tpcY, dZp + dZ12 + dZ23 + dZu + dZe);
+    GeometrySimple *geo = new GeometrySimple;
+    geo->AddSolid(box, fGas);
+
+    ComponentConstant* fm = new ComponentConstant();
+    fm->SetMedium(fGas);
+    fm->SetGeometry(geo);
+    fm->SetMagneticField(parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
     return fm;
 }

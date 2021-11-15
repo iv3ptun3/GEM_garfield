@@ -39,11 +39,6 @@ int main(int argc, char *argv[])
     parMan->initPars(argv[1]);
     // parMan->listPars();
 
-    // get a field map from the builder
-    FieldMapBuilder *fmBuilder = new FieldMapBuilder();
-    fmBuilder->initGas();
-    ComponentElmer *fm = fmBuilder->buildGemFieldMap();
-
     // tripple gem dimension
     const double pitch = parMan->getParD("PITCH");
     const double tD = parMan->getParD("T_DIEL");
@@ -55,18 +50,18 @@ int main(int argc, char *argv[])
 
     const double tpcX = parMan->getParD("TPC_X");
     const double tpcY = parMan->getParD("TPC_Y");
-    // voltage
-    const double dvg1 = parMan->getParD("DV_GEM1");
-    const double dvg2 = parMan->getParD("DV_GEM2");
-    const double dvg3 = parMan->getParD("DV_GEM3");
-    // electric field density
-    const double eTrans = parMan->getParD("E_TRANS");
-    const double eDrift = parMan->getParD("E_DRIFT");
-    const double eInduction = parMan->getParD("E_INDUCTION");
+    
+    // get a field map from the builder
+    FieldMapBuilder *fmBuilder = new FieldMapBuilder();
+    fmBuilder->initGas();
+    
+    ComponentElmer *fm1 = fmBuilder->buildGemFieldMap();
+    ComponentConstant *fm2 = fmBuilder->buildMagneticField();
 
     // Create the sensor.
     Sensor sensor;
-    sensor.AddComponent(fm);
+    sensor.AddComponent(fm1);
+    sensor.AddComponent(fm2);
     sensor.SetArea(-tpcX/2, -tpcY/2, 0, tpcX/2, tpcY/2, dZp + dZ12 + dZ23 + dZu);
 
     AvalancheMicroscopic aval;
@@ -151,79 +146,9 @@ int main(int argc, char *argv[])
 
     // delete allocated memory
     delete parMan;
-    delete fm;
+    delete fm1;
+    delete fm2;
     freeTrackClustersPtr(&clusters);
     freeDriftEndPointsPtr(&endPoints);
-    return 0;    
-    /*
-    TCanvas *cf = new TCanvas("cf", "", 600, 600);
-    cf->SetLeftMargin(0.16);
-    
-    ViewDrift driftView;
-
-    constexpr bool plotDrift = true;
-    if (plotDrift)
-    {
-        aval.EnablePlotting(&driftView);
-        drift.EnablePlotting(&driftView);
-    }
-
-    constexpr unsigned int nEvents = 10;
-    for (unsigned int i = 0; i < nEvents; ++i)
-    {
-        std::cout << i << "/" << nEvents << "\n";
-        // Randomize the initial position.
-        const double x0 = -0.5 * pitch + RndmUniform() * pitch;
-        const double y0 = -0.5 * pitch + RndmUniform() * pitch;
-        const double z0 = 0.02;
-        const double t0 = 0.;
-        const double e0 = 0.1;
-        aval.AvalancheElectron(x0, y0, z0, t0, e0, 0., 0., 0.);
-        int ne = 0, ni = 0;
-        aval.GetAvalancheSize(ne, ni);
-        const unsigned int np = aval.GetNumberOfElectronEndpoints();
-        double xe1, ye1, ze1, te1, e1;
-        double xe2, ye2, ze2, te2, e2;
-        double xi1, yi1, zi1, ti1;
-        double xi2, yi2, zi2, ti2;
-        int status;
-        for (unsigned int j = 0; j < np; ++j)
-        {
-            aval.GetElectronEndpoint(j, xe1, ye1, ze1, te1, e1,
-                                     xe2, ye2, ze2, te2, e2, status);
-            drift.DriftIon(xe1, ye1, ze1, te1);
-            drift.GetIonEndpoint(0, xi1, yi1, zi1, ti1,
-                                 xi2, yi2, zi2, ti2, status);
-        }
-    }
-    if (plotDrift)
-    {
-        TCanvas *cd = new TCanvas();
-        constexpr bool plotMesh = true;
-        if (plotMesh)
-        {
-            ViewFEMesh *meshView = new ViewFEMesh();
-            meshView->SetArea(-2 * pitch, -2 * pitch, -0.02,
-                              2 * pitch, 2 * pitch, 0.02);
-            meshView->SetCanvas(cd);
-            meshView->SetComponent(&fm);
-            // x-z projection.
-            meshView->SetPlane(0, -1, 0, 0, 0, 0);
-            meshView->SetFillMesh(true);
-            meshView->SetColor(0, kGray);
-            // Set the color of the kapton.
-            meshView->SetColor(2, kYellow + 3);
-            meshView->EnableAxes();
-            meshView->SetViewDrift(&driftView);
-            meshView->Plot();
-        }
-        else
-        {
-            driftView.SetPlane(0, -1, 0, 0, 0, 0);
-            driftView.SetArea(-2 * pitch, -0.02, 2 * pitch, 0.02);
-            driftView.SetCanvas(cd);
-            constexpr bool twod = true;
-            driftView.Plot(twod);
-        }
-    }*/
+    return 0;
 }
