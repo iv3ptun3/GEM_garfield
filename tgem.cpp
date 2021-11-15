@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
     const double dZ23 = parMan->getParD("DZ_GEM23");
     const double dZu = parMan->getParD("DZ_UPPERPLANE");
     const double dZe = parMan->getParD("DZ_ELECTRODE");
-
     const double tpcX = parMan->getParD("TPC_X");
     const double tpcY = parMan->getParD("TPC_Y");
     
@@ -72,24 +71,10 @@ int main(int argc, char *argv[])
     drift.SetSensor(&sensor);
     drift.SetDistanceSteps(2.e-4);
     drift.EnableMagneticField(true);
-    
-    TrackClustersPtr clusters;
-    allocateTrackClustersPtr(&clusters, nEvt);
-    clusters.evtId = 0;
-    clusters.trkId = 0;
-    clusters.nc = nEvt;
-    for (int i = 0; i < nEvt; ++i)
-    {
-        clusters.xc[i] = 0.0;
-        clusters.yc[i] = 0.0;
-        clusters.zc[i] = dZp + dZ12 + dZ23 + dZu * 0.999;
-        clusters.tc[i] = 0.0;
-        clusters.ec[i] = 0.0;
-    }
     TTree *tree = new TTree("tc", "tc");
 
     DriftEndPointsPtr endPoints;
-    unsigned int dataPtr;
+    unsigned int evtId = 0;
     unsigned int np;
     int ne, ni;
     double xe1, ye1, ze1, te1, e1;
@@ -97,13 +82,10 @@ int main(int argc, char *argv[])
     double xi1, yi1, zi1, ti1;
     double xi2, yi2, zi2, ti2;
     int status;
+    unsigned int dataPtr;
     allocateDriftEndPointsPtr(&endPoints, BUFF_AVALANCHE);
     // event
-    tree->Branch("evtId", &clusters.evtId, "evtId/i");
-    // tracks in an event
-    tree->Branch("trkId", &clusters.trkId, "trkId/i");
-    // clusters on trajectory
-    tree->Branch("cltId", &endPoints.cltId, "cltId/i");
+    tree->Branch("evtId", &evtId, "evtId/i");
     tree->Branch("ne", &dataPtr, "ne/i");
     tree->Branch("xe1", endPoints.xe1, "xe1[ne]/D");
     tree->Branch("ye1", endPoints.ye1, "ye1[ne]/D");
@@ -117,12 +99,11 @@ int main(int argc, char *argv[])
     tree->Branch("e2", endPoints.e2, "e2[ne]/D");
     tree->Branch("status", endPoints.status, "status[ne]/i");
     // event loop
-    for (endPoints.cltId = 0; endPoints.cltId < clusters.nc; ++endPoints.cltId)
+    for (evtId = 0; evtId < nEvt; ++evtId)
     {
         dataPtr = 0;
-        aval.AvalancheElectron(clusters.xc[endPoints.cltId], clusters.yc[endPoints.cltId], clusters.zc[endPoints.cltId],
-            clusters.ec[endPoints.cltId], clusters.tc[endPoints.cltId],
-            0., 0., 0.);
+        aval.AvalancheElectron(0., 0., dZp + dZ12 + dZ23 + dZu * 0.999,
+            0., 0.1, 0., 0., 0.);
         aval.GetAvalancheSize(ne, ni);
         np = aval.GetNumberOfElectronEndpoints();
         for (unsigned int j = 0; j < np; ++j)
@@ -137,8 +118,11 @@ int main(int argc, char *argv[])
             }
             ++dataPtr;
         }
-        std::cout << endPoints.cltId << "/" << nEvt << " : " << dataPtr << "\n";
+        std::cout << evtId << "/" << nEvt << " : " << dataPtr << "\n";
         tree->Fill();
+        if((evtId + 1) % 1 == 0)
+            tree->AutoSave("SaveSelf");
+
     }
     tree->Write();
     file->Close();
@@ -148,7 +132,6 @@ int main(int argc, char *argv[])
     delete parMan;
     delete fm1;
     delete fm2;
-    freeTrackClustersPtr(&clusters);
     freeDriftEndPointsPtr(&endPoints);
     return 0;
 }
