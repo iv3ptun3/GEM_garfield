@@ -1,6 +1,9 @@
 #include <cstdlib>
 #include <string>
 
+#include "Garfield/SolidBox.hh"
+#include "Garfield/GeometrySimple.hh"
+
 #include "FieldMapBuilder.hpp"
 #include "ParManager.hpp"
 #include "Errors.hpp"
@@ -33,8 +36,22 @@ ComponentConstant* FieldMapBuilder::buildDriftFieldMap()
         printError("FieldMapBuilder", "buildDriftFieldMap()", "fGas is a null pointer.");
         return nullptr;
     }
+    const double tpcX = parMan->getParD("TPC_X");
+    const double tpcY = parMan->getParD("TPC_Y");
+    const double dZp = parMan->getParD("DZ_PADPLANE");
+    const double dZ12 = parMan->getParD("DZ_GEM12");
+    const double dZ23 = parMan->getParD("DZ_GEM23");
+    const double dZu = parMan->getParD("DZ_UPPERPLANE");
+    const double dZe = parMan->getParD("DZ_ELECTRODE");
+
+    // define drift field region as simple box
+    SolidBox *box = new SolidBox(-tpcX / 2, -tpcY / 2, dZp + dZ12 + dZ23 + dZu, tpcX, tpcY, dZe);
+    GeometrySimple *geo = new GeometrySimple;
+    geo->AddSolid(box, fGas);
+
     ComponentConstant* fm = new ComponentConstant();
     fm->SetMedium(fGas);
+    fm->SetGeometry(geo);
     fm->SetElectricField(0., 0., parMan->getParD("E_DRIFT"));
     fm->SetMagneticField(parMan->getParD("B_X"), parMan->getParD("B_Y"), parMan->getParD("B_Z"));
     return fm;
