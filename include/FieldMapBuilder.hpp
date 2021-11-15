@@ -24,7 +24,7 @@ class FieldMapBuilder{
         MediumMagboltz* initGas();
         // return ptr to ComponentFieldMap of drift field or tripple GEM field.
         ComponentConstant* buildDriftFieldMap();
-        ComponentElmer* buildGemFieldMap();
+        ComponentElmer* buildGemFieldMap(const bool print = true);
     private:
     private:
         MediumMagboltz* fGas;

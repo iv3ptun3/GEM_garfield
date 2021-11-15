@@ -57,7 +57,7 @@ ComponentConstant* FieldMapBuilder::buildDriftFieldMap()
     return fm;
 }
 
-ComponentElmer* FieldMapBuilder::buildGemFieldMap()
+ComponentElmer* FieldMapBuilder::buildGemFieldMap(const bool print)
 {
     auto parMan = ParManager::getInstance();
     string script = parMan->getParS("SCRIPT_NAME");
