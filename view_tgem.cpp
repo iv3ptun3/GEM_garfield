@@ -114,7 +114,6 @@ int main(int argc, char *argv[])
     AvalancheMicroscopic aval;
     aval.EnablePlotting(&driftView);
     aval.SetSensor(&sensor);
-    // aval.EnableMagneticField(true);
     // set the number of steps to be skipped when plotting.
     aval.SetCollisionSteps(100);
 

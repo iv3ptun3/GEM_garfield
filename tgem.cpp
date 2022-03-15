@@ -70,7 +70,6 @@ int main(int argc, char *argv[])
     AvalancheMC drift;
     drift.SetSensor(&sensor);
     drift.SetDistanceSteps(2.e-4);
-    drift.EnableMagneticField(true);
     TTree *tree = new TTree("tc", "tc");
 
     DriftEndPointsPtr endPoints;
