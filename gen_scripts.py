@@ -20,6 +20,7 @@ if len(sys.argv) < 3 or "--help" in sys.argv:
 reader = pr.ParManager.instance(True)
 reader.initPars(sys.argv[1])
 scriptName = reader.getPar("SCRIPT_NAME")
+print("---------------------------------------------------------------------------------------------")
 if "-geo" in sys.argv or "-all" in sys.argv:
     # generating geometry(.geo) file
     print("Generating " + scriptName + ".geo file..., ", end="")
@@ -46,3 +47,4 @@ if "-diel" in sys.argv or "-all" in sys.argv:
     dielFile.writelines(diel)
     dielFile.close()
     print("done.")
+print("---------------------------------------------------------------------------------------------")
