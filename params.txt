@@ -78,7 +78,7 @@ TPC_X       10
 TPC_Y       10
 
 # Distance between GEMs, pad plane and upper boundary plane
-DZ_ELECTRODE        10
+DZ_ELECTRODE        7.8
 DZ_UPPERPLANE       0.2
 DZ_GEM12            0.2
 DZ_GEM23            0.2
@@ -92,22 +92,22 @@ MSIZE_DIEL_OUTER_HOLE       0.0015
 MSIZE_HOLE_CENTER           0.0025
 
 # Electric field
-E_TRANS             1000
-E_DRIFT             1000
-E_INDUCTION         1000
+E_DRIFT             150
+E_TRANS             1500
+E_INDUCTION         1500
 
 # Magnetic field
 B_X                 0.
 B_Y                 0.
-B_Z                 1.
+B_Z                 2.5.
 
 # Voltage differences between copper layers of GEMs
-DV_GEM1             320
-DV_GEM2             320
-DV_GEM3             320
+DV_GEM1             300
+DV_GEM2             300
+DV_GEM3             300
 
 # Gas configuration
-GAS_MEDIUM          he
+GAS_MEDIUM          He
 GAS_MEDIUM_FRAC     90.
 GAS_MEDIUM_A        4.003
 GAS_MEDIUM_Z        2.
@@ -115,7 +115,7 @@ GAS_MEDIUM_FANO     0.2
 GAS_MEDIUM_WORK     43.2
 
 # iso butane
-GAS_QUENCHING       ic4h10
+GAS_QUENCHING       iC4H10
 GAS_QUENCHING_FRAC  10.
 GAS_QUENCHING_A     58.12
 GAS_QUENCHING_Z     34.

@@ -30,8 +30,8 @@ Simulation
   Coordinate System = Cartesian 3D
   Simulation Type = Steady State
   Steady State Max Iterations = 1
-  Output File = "tgemcell.result"
-  Post File = "tgemcell.ep"
+  Output File = "{SCRIPT_NAME}.result"
+  Post File = "{SCRIPT_NAME}.ep"
 End
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Constants
