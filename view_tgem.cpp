@@ -15,10 +15,14 @@
 #include "Garfield/AvalancheMC.hh"
 #include "Garfield/Random.hh"
 
+#include "ComponentFactory.hpp"
+#include "MediumMagboltzFactory.hpp"
+
 #include "ParManager.hpp"
-#include "FieldMapBuilder.hpp"
 
 using namespace Garfield;
+
+std::unique_ptr<MediumMagboltz> initGasMixture(const ParManager *parMan);
 
 int main(int argc, char *argv[])
 {
@@ -27,13 +31,9 @@ int main(int argc, char *argv[])
         std::cout << "Usage : view_tgem [parameter file]" << std::endl;
         return 0;
     }
-    // Initializing global managers.
+    // Initializing a global manager for configure parameters.
     auto parMan = ParManager::getInstance();
-    parMan->initPars(argv[1]);
-    // parMan->listPars();
-
-    TApplication app("app", &argc, argv);
-
+    parMan->initPars(argv[1]);    
     // tripple gem dimension
     const double pitch = parMan->getParD("PITCH");
     const double tD = parMan->getParD("T_DIEL");
@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
     const double dZ12 = parMan->getParD("DZ_GEM12");
     const double dZ23 = parMan->getParD("DZ_GEM23");
     const double dZu = parMan->getParD("DZ_UPPERPLANE");
+    const double dZe = parMan->getParD("DZ_ELECTRODE");
     const double tpcX = parMan->getParD("TPC_X");
     const double tpcY = parMan->getParD("TPC_Y");
     // voltage
@@ -51,12 +52,16 @@ int main(int argc, char *argv[])
     const double eTrans = parMan->getParD("E_TRANS");
     const double eDrift = parMan->getParD("E_DRIFT");
     const double eInduction = parMan->getParD("E_INDUCTION");
+    // magnetic field
+    const double bField = parMan->getParD("B_Z");
+    // elmer data name
+    const std::string fmFileName = parMan->getParS("SCRIPT_NAME");
 
-    // get a field map from the builder
-    FieldMapBuilder *fmBuilder = new FieldMapBuilder();
-    fmBuilder->initGas();
-    ComponentElmer *fm1 = fmBuilder->buildGemFieldMap();
-    ComponentConstant *fm2 = fmBuilder->buildMagneticField();
+    std::unique_ptr<MediumMagboltz> gas = initGasMixture(parMan);
+
+    std::unique_ptr<ComponentElmer> componentGem = ComponentFactory::createElmer(gas.get(), fmFileName);
+
+    TApplication app("app", &argc, argv);
 
     // plot equipotential lines of GEM1
     TCanvas *cf1 = new TCanvas("cf1", "Potential plot of GEM1", 600, 600); cf1->SetLeftMargin(0.16);
@@ -65,7 +70,7 @@ int main(int argc, char *argv[])
     TCanvas *cf4 = new TCanvas("cf4", "Potential plot", 600, 600); cf4->SetLeftMargin(0.16);
 
     ViewField vf;
-    vf.SetComponent(fm1);
+    vf.SetComponent(componentGem.get());
     vf.SetNumberOfContours(50);
     vf.SetPlaneXZ();
 
@@ -91,7 +96,7 @@ int main(int argc, char *argv[])
     vf.PlotContour();
 
     vf.SetCanvas(cf4);
-    vf.SetVoltageRange(-dZp * eInduction - dvg1 - dZ12 * eTrans - dvg2 - dZ23 * eTrans - dZu*eDrift, 0.);
+    vf.SetVoltageRange(-dZp * eInduction - dvg3 - dZ23 * eTrans - dvg2 - dZ12 * eTrans - dvg1 - dZu*eDrift, 0.);
     vf.SetArea(-tpcX/2, 0, tpcX/2, dZp + dZ12 + dZ23 + dZu);
     vf.PlotContour();
     
@@ -101,8 +106,7 @@ int main(int argc, char *argv[])
 
     Sensor sensor;
     sensor.SetArea(-tpcX / 2, -tpcY / 2, 0., tpcX / 2, tpcY / 2, dZp + dZ12 + dZ23 + dZu);
-    sensor.AddComponent(fm1);
-    sensor.AddComponent(fm2);
+    sensor.AddComponent(componentGem.get());
 
     // drift of ions
     AvalancheMC drift;
@@ -147,7 +151,7 @@ int main(int argc, char *argv[])
     TCanvas *cd4 = new TCanvas("cd4", "Drift line", 600, 600);cd4->SetLeftMargin(0.16);
 
     ViewFEMesh meshView;
-    meshView.SetComponent(fm1);
+    meshView.SetComponent(componentGem.get());
     // x-z projection.
     meshView.SetPlaneXZ();
     // Set the color of the kapton.
@@ -176,4 +180,15 @@ int main(int argc, char *argv[])
     meshView.Plot();
 
     app.Run(true);
+}
+
+std::unique_ptr<MediumMagboltz> initGasMixture(const ParManager *parMan)
+{
+    auto gas = MediumMagboltzFactory::createGasMixture(
+        parMan->getParS("GAS_MEDIUM"), parMan->getParD("GAS_MEDIUM_FRAC"),
+        parMan->getParS("GAS_QUENCHING"), parMan->getParD("GAS_QUENCHING_FRAC"));
+    gas->SetPressure(parMan->getParD("GAS_PRESSURE"));
+    gas->EnablePenningTransfer(parMan->getParD("GAS_PENNING_EFF"), parMan->getParD("GAS_PENNING_LAMB"), parMan->getParS("GAS_MEDIUM"));
+    gas->Initialise(true);
+    return std::move(gas);
 }

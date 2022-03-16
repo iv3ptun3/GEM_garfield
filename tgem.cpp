@@ -14,12 +14,16 @@
 #include "Garfield/AvalancheMC.hh"
 #include "Garfield/Random.hh"
 
-#include "FieldMapBuilder.hpp"
+#include "ComponentFactory.hpp"
+#include "MediumMagboltzFactory.hpp"
+
 #include "DataStruct.hpp"
 #include "ParManager.hpp"
 using namespace Garfield;
 
 constexpr unsigned int BUFF_AVALANCHE = 1000000;
+
+std::unique_ptr<MediumMagboltz> initGasMixture(const ParManager *parMan);
 
 int main(int argc, char *argv[])
 {
@@ -34,33 +38,49 @@ int main(int argc, char *argv[])
     TFile* file = TFile::Open(argv[2], "RECREATE");
     const unsigned int nEvt = atoi(argv[3]);
 
-    // Initializing global managers.
+    // Initializing a global manager for configure parameters.
     auto parMan = ParManager::getInstance();
-    parMan->initPars(argv[1]);
-    // parMan->listPars();
-
+    parMan->initPars(argv[1]);     
     // tripple gem dimension
     const double pitch = parMan->getParD("PITCH");
     const double tD = parMan->getParD("T_DIEL");
     const double dZp = parMan->getParD("DZ_PADPLANE");
     const double dZ12 = parMan->getParD("DZ_GEM12");
     const double dZ23 = parMan->getParD("DZ_GEM23");
-    const double dZu = parMan->getParD("DZ_UPPERPLANE");
     const double dZe = parMan->getParD("DZ_ELECTRODE");
+    const double dZu = parMan->getParD("DZ_UPPERPLANE");
     const double tpcX = parMan->getParD("TPC_X");
     const double tpcY = parMan->getParD("TPC_Y");
-    
-    // get a field map from the builder
-    FieldMapBuilder *fmBuilder = new FieldMapBuilder();
-    fmBuilder->initGas();
-    
-    ComponentElmer *fm1 = fmBuilder->buildGemFieldMap();
-    ComponentConstant *fm2 = fmBuilder->buildMagneticField();
+    // voltage
+    const double dvg1 = parMan->getParD("DV_GEM1");
+    const double dvg2 = parMan->getParD("DV_GEM2");
+    const double dvg3 = parMan->getParD("DV_GEM3");
+    // electric field density
+    const double eTrans = parMan->getParD("E_TRANS");
+    const double eDrift = parMan->getParD("E_DRIFT");
+    const double eInduction = parMan->getParD("E_INDUCTION");
+    // magnetic field
+    const double bField = parMan->getParD("B_Z");
+    // elmer data name
+    const std::string fmFileName = parMan->getParS("SCRIPT_NAME");
+
+    std::unique_ptr<MediumMagboltz> gas = initGasMixture(parMan);
+
+    std::unique_ptr<ComponentElmer> componentGem = ComponentFactory::createElmer(gas.get(), fmFileName);
+    std::unique_ptr<ComponentConstant> componentDrift = ComponentFactory::createConstE(
+        gas.get(), eDrift,
+        -tpcX / 2, -tpcY / 2, dZp + dZ12 + dZ23 + dZu,
+        tpcX, tpcY, dZp + dZ12 + dZ23 + dZu + dZe);
+    std::unique_ptr<ComponentConstant> componentMag = ComponentFactory::createConstB(
+        gas.get(), bField,
+        -tpcX / 2, -tpcY / 2, 0.,
+        tpcX, tpcY, dZp + dZ12 + dZ23 + dZu + dZe);
 
     // Create the sensor.
     Sensor sensor;
-    sensor.AddComponent(fm1);
-    sensor.AddComponent(fm2);
+    sensor.AddComponent(componentGem.get());
+    sensor.AddComponent(componentDrift.get());
+    sensor.AddComponent(componentMag.get());
     sensor.SetArea(-tpcX/2, -tpcY/2, 0, tpcX/2, tpcY/2, dZp + dZ12 + dZ23 + dZu);
 
     AvalancheMicroscopic aval;
@@ -129,8 +149,17 @@ int main(int argc, char *argv[])
 
     // delete allocated memory
     delete parMan;
-    delete fm1;
-    delete fm2;
     freeDriftEndPointsPtr(&endPoints);
     return 0;
+}
+
+std::unique_ptr<MediumMagboltz> initGasMixture(const ParManager *parMan)
+{
+    auto gas = MediumMagboltzFactory::createGasMixture(
+        parMan->getParS("GAS_MEDIUM"), parMan->getParD("GAS_MEDIUM_FRAC"),
+        parMan->getParS("GAS_QUENCHING"), parMan->getParD("GAS_QUENCHING_FRAC"));
+    gas->SetPressure(parMan->getParD("GAS_PRESSURE"));
+    gas->EnablePenningTransfer(parMan->getParD("GAS_PENNING_EFF"), parMan->getParD("GAS_PENNING_LAMB"), parMan->getParS("GAS_MEDIUM"));
+    gas->Initialise(true);
+    return std::move(gas);
 }
