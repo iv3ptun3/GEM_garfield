@@ -127,6 +127,8 @@ SRIM_DATA SRIM/he_iC4H10/90_10/he_iC4H10_90_10_076.txt
 
 GAS_PRESSURE        076
 GAS_TEMPERATURE     293.15
+# Penning transfer probility of He/iC4H10 (95/5) mixutre at 1 atm.
+# Understanding avalanches in a Micromegas from single-electron response measurement
 GAS_PENNING_EFF     0.175
 GAS_PENNING_LAMB    0.
 GAS_ION_MOBILITY    /share/Garfield/Data/IonMobility_He+_He.txt
