@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 import os
 import sys
-sys.path.append("./pysource/")
+sys.path.append("../scripts/")
 import parManager as pr
 import geometry as tgg
 import startinfo as tgs

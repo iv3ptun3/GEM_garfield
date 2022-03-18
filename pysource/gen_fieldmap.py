@@ -3,7 +3,7 @@
 #!/usr/bin/env python
 import os
 import sys
-sys.path.append("./pysource/")
+sys.path.append("../scripts/")
 import parManager as pr
 
 if len(sys.argv) != 2 or "--help" in sys.argv:

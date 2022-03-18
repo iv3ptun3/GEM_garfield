@@ -1,4 +1,4 @@
-parameters_tmp/
+*.config
 build/
 .vscode/
 pysource/__pycache__/
