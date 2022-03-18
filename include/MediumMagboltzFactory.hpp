@@ -11,9 +11,18 @@
 // A factory pattern creating prototype instances.
 class MediumMagboltzFactory {
     public:
+    // with penning effect disabled
     static std::unique_ptr<Garfield::MediumMagboltz> createGasMixture(
         const std::string &mediumn, double fracMedium,
         const std::string &quenching, double fracQuenching);
+
+    // with penning effect enabled
+    static std::unique_ptr<Garfield::MediumMagboltz> createGasMixture(
+        const std::string &mediumn, double fracMedium,
+        const std::string &quenching, double fracQuenching,
+        double penningEff, double penningLamb = 0);
+
+    static std::unique_ptr<Garfield::MediumMagboltz> createFromGasFile(const std::string &gasFileName, bool quite = false);
 
     private:
     static bool checkFraction(double frac1, double frac2);
