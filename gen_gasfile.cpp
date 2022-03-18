@@ -1,11 +1,15 @@
 #include <cstdlib>
 #include <iostream>
+#include <vector>
 
 #include "Garfield/MediumMagboltz.hh"
 
 #include "MediumMagboltzFactory.hpp"
 
 using namespace Garfield;
+
+std::vector<double> ElectricFieldGrid();
+std::vector<double> MagneticFieldGrid();
 
 int main(int argc, char *argv[])
 {
@@ -23,28 +27,42 @@ int main(int argc, char *argv[])
     const double frac1 = atof(argv[2]), frac2 = atof(argv[4]);
     const double pressure = atof(argv[5]);
 
-    const size_t nE = 1;
-    const double emin = 100.;
-    const double emax = 2000.;
-    // Flag to request logarithmic spacing.
-    constexpr bool useLog = false;
-    // Range of magnetic fields [Tesla]
-    const size_t nB = 1;
-    const double bmin = 0.;
-    const double bmax = 3.;
-    
-    // Range of angles [rad]
-    const size_t nA = 1;
-    const double amin = 0.;
-    const double amax = HalfPi;
+    std::vector<double> eFieldGrid = ElectricFieldGrid();
+    std::vector<double> bFieldGrid = MagneticFieldGrid();
+    std::vector<double> aGrid = {0.};
 
     std::unique_ptr<MediumMagboltz> gas
         = MediumMagboltzFactory::createGasMixture(gas1, frac1, gas2, frac2);
     gas->SetPressure(pressure);
-    gas->SetFieldGrid(emin, emax, nE, useLog, bmin, bmax, nB, amin, amax, nA); 
+    gas->SetFieldGrid(eFieldGrid, bFieldGrid, aGrid); 
     gas->GenerateGasTable(10, false);
     char gasFileName[256];
     sprintf(gasFileName, "%s_%02d_%s_%02d_%04d.gas", gas1, (int)frac1, gas2, (int)frac2, (int)pressure);
     gas->WriteGasFile(gasFileName);
     return 0;
+}
+
+std::vector<double> ElectricFieldGrid()
+{
+    std::vector<double> fieldGrid;
+    // Linear range from 100 V/cm to 1900 V/cm 
+    for(int i = 0;i < 10;++i)
+        fieldGrid.push_back(100. + 200.*i);
+    // Roughly logarithmic range to 200000.
+    fieldGrid.push_back(5000.);
+    fieldGrid.push_back(10000.);
+    fieldGrid.push_back(20000.);
+    fieldGrid.push_back(50000.);
+    fieldGrid.push_back(100000.);
+    fieldGrid.push_back(200000.);
+    return fieldGrid;
+}
+
+std::vector<double> MagneticFieldGrid()
+{
+    std::vector<double> fieldGrid;
+    // Linear range from 0 T to 3.0 T 
+    for(int i = 0;i < 7;++i)
+        fieldGrid.push_back(0.5*i);
+    return fieldGrid;
 }
