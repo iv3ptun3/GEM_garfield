@@ -23,13 +23,13 @@ int main(int argc, char *argv[])
     const double frac1 = atof(argv[2]), frac2 = atof(argv[4]);
     const double pressure = atof(argv[5]);
 
-    const size_t nE = 10;
+    const size_t nE = 1;
     const double emin = 100.;
     const double emax = 2000.;
     // Flag to request logarithmic spacing.
     constexpr bool useLog = false;
     // Range of magnetic fields [Tesla]
-    const size_t nB = 10;
+    const size_t nB = 1;
     const double bmin = 0.;
     const double bmax = 3.;
     
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     gas->SetFieldGrid(emin, emax, nE, useLog, bmin, bmax, nB, amin, amax, nA); 
     gas->GenerateGasTable(10, false);
     char gasFileName[256];
-    sprintf(gasFileName, "%s_%02d_%s_%02d_%03d.gas", gas1, (int)frac1, gas2, (int)frac2, (int)pressure);
+    sprintf(gasFileName, "%s_%02d_%s_%02d_%04d.gas", gas1, (int)frac1, gas2, (int)frac2, (int)pressure);
     gas->WriteGasFile(gasFileName);
     return 0;
 }
