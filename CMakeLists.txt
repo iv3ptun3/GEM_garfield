@@ -16,12 +16,14 @@ add_executable(tgem tgem.cpp ${SOURCES})
 add_executable(view_tgem view_tgem.cpp ${SOURCES})
 add_executable(gen_gasfile gen_gasfile.cpp ${SOURCES})
 add_executable(plot_gasfile plot_gasfile.cpp ${SOURCES})
+add_executable(tgem_gain tgem_gain.cpp ${SOURCES})
 
 target_link_libraries(simple_track Garfield::Garfield ${ROOT_LIBRARIES})
 target_link_libraries(tgem Garfield::Garfield ${ROOT_LIBRARIES})
 target_link_libraries(view_tgem Garfield::Garfield ${ROOT_LIBRARIES})
 target_link_libraries(gen_gasfile Garfield::Garfield ${ROOT_LIBRARIES})
 target_link_libraries(plot_gasfile Garfield::Garfield ${ROOT_LIBRARIES})
+target_link_libraries(tgem_gain Garfield::Garfield ${ROOT_LIBRARIES})
 
 include_directories(${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/include/SRIM/)
 
