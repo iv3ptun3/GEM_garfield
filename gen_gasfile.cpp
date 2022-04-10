@@ -63,8 +63,8 @@ std::vector<double> ElectricFieldGrid()
     fieldGrid.push_back(10000.);
     fieldGrid.push_back(20000.);
     fieldGrid.push_back(50000.);
-    fieldGrid.push_back(100000.);
-    fieldGrid.push_back(200000.);
+    // fieldGrid.push_back(100000.);
+    // fieldGrid.push_back(200000.);
     return fieldGrid;
 }
 
