@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
     const string gasFileName = parMan->getParS("GAS_FILE");
     
     unique_ptr<MediumMagboltz> gas = MediumMagboltzFactory::createFromGasFile(gasFileName);
+    gas->SetMaxElectronEnergy(2000.);
     unique_ptr<ComponentElmer> componentGem = ComponentFactory::createElmer(gas.get(), scriptDir);
     unique_ptr<ComponentConstant> componentConst = ComponentFactory::createConstB(gas.get(), 2.5
         , -tpcX/2, -tpcY/2, 0, tpcX/2, tpcY/2, dZp + dZ12 + dZ23 + dZu);
@@ -75,8 +76,9 @@ int main(int argc, char *argv[])
     // analyzers
     RunAnalyzer runAna;
     GainEventAnalyzer eventAna(&aval);
-    runAna.SetEventAnalyzer(&eventAna);
     runAna.Open(scriptDir + "/" + scriptDir + ".root");
+    runAna.SetEventAnalyzer(&eventAna);
+    runAna.SaveByEvent();
     // event loop
     const int timeOut = 216000; // 2.5 days
     cout << "Begin of Event Loop..." << endl;

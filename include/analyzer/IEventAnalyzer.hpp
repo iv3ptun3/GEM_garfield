@@ -20,7 +20,6 @@ class IEventAnalyzer {
     protected:
     virtual void Init() = 0;
     virtual void AnalyzeEvent() = 0;
-    virtual void Write(TDirectory *dir) = 0;
 };
 
 #endif // IEVENTANALYZER_HPP

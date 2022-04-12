@@ -50,15 +50,5 @@ void GainEventAnalyzer::AnalyzeEvent()
         }
     }
     treeGain->Fill();
-    treeGain->AutoSave("SaveSelf");
     std::cout << evtId  << " : " << gain << "\n";
-}
-
-void GainEventAnalyzer::Write(TDirectory *dir)
-{
-    treeGain->SetDirectory(dir);
-    xHist->SetDirectory(dir);
-    yHist->SetDirectory(dir);
-    tHist->SetDirectory(dir);
-    dir->Write();
 }

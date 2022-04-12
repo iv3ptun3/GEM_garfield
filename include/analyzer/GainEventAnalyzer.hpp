@@ -17,7 +17,9 @@ class GainEventAnalyzer : public IEventAnalyzer {
     protected:
     virtual void Init() override;
     virtual void AnalyzeEvent() override;
-    virtual void Write(TDirectory *dir) override;
+
+    private:
+    void Update();
 
     private:
     const Garfield::AvalancheMicroscopic *aval;
