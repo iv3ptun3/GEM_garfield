@@ -29,6 +29,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/include
 
 # ---Copy all files locally to the build directory-------------------------------
 file(GLOB_RECURSE SRIM_DATA RELATIVE ${CMAKE_SOURCE_DIR} SRIM/*.txt)
+file(GLOB_RECURSE PARAMETERS RELATIVE ${CMAKE_SOURCE_DIR} parameters/**)
 file(GLOB_RECURSE RESOURCES RELATIVE ${CMAKE_SOURCE_DIR} resources/**)
 
 foreach(_file
@@ -36,6 +37,7 @@ foreach(_file
   pysource/gen_fieldmap.py pysource/gen_scripts.py pysource/parManager.py
   parameters/params.txt 
   ${SRIM_DATA}
+  ${PARAMETERS}
   ${RESOURCES})
   configure_file(${_file} ${CMAKE_CURRENT_BINARY_DIR}/${_file} COPYONLY)
 endforeach()
