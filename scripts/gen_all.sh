@@ -4,5 +4,5 @@ elif [ ! -e ${1} ];then
     echo "Parameter file ${1} does not exist."
 fi
 
-python3 pysource/gen_scripts.py ${1} -all
-python3 pysource/gen_fieldmap.py ${1}
+python3 scripts/gen_scripts.py ${1} -all
+python3 scripts/gen_fieldmap.py ${1}

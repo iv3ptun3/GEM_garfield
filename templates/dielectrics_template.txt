@@ -1,4 +1,4 @@
-dielectrics_txt = """10
+10
 1 {PER_GAS}
 2 {PER_INSULATOR}
 3 {PER_COPPER}
@@ -8,4 +8,4 @@ dielectrics_txt = """10
 7 {PER_COPPER}
 8 {PER_INSULATOR}
 9 {PER_COPPER}
-10 {PER_COPPER}"""
+10 {PER_COPPER}

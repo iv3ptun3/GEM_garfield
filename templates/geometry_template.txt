@@ -1,5 +1,4 @@
-# this modules contains geometry and start information file(.sif for ElmerSolver) where parameters are replaced with the python-type format
-geometry_txt = """// All length quantities are in cm.
+// All length quantities are in cm.
 rI = {R_INNER}; // inner hole radius
 rO = {R_OUTER}; // outer hole radius
 rE = {R_ETCH}; // etch mount(= cupper hole radius > rO(hole radius on dielectric layer)) 
@@ -1967,4 +1966,4 @@ ps_per_ymax = news; Physical Surface(ps_per_ymax) = {{
     s_g3_uc_h23_tb1, s_g3_diel_h23_tb1, s_g3_lc_h23_tb1}};  
 // ---------------------------------------------------------------------------------------------------------------
 // Mesh generation commands
-// ---------------------------------------------------------------------------------------------------------------"""
+// ---------------------------------------------------------------------------------------------------------------

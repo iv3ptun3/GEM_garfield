@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 3)
     {
-        cout << "Usage : tgem [parameter file] [nEvent]" << endl;
+        cout << "Usage : tgem_gain [parameter file] [nEvent]" << endl;
         return 0;
     }
     const string parFileName = argv[1];
@@ -54,10 +54,11 @@ int main(int argc, char *argv[])
     const string gasFileName = parMan->getParS("GAS_FILE");
     
     unique_ptr<MediumMagboltz> gas = MediumMagboltzFactory::createFromGasFile(gasFileName);
-    gas->SetMaxElectronEnergy(2000.);
+
     unique_ptr<ComponentElmer> componentGem = ComponentFactory::createElmer(gas.get(), scriptDir);
     unique_ptr<ComponentConstant> componentConst = ComponentFactory::createConstB(gas.get(), 2.5
         , -tpcX/2, -tpcY/2, 0, tpcX/2, tpcY/2, dZp + dZ12 + dZ23 + dZu);
+
     // Create the sensor.
     Sensor sensor;
     sensor.AddComponent(componentGem.get());

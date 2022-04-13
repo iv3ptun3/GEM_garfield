@@ -19,7 +19,7 @@ std::unique_ptr<Garfield::MediumMagboltz> MediumMagboltzFactory::createGasMixtur
         gas->SetComposition(medium, fracMedium, quenching, fracQuencher);
         gas->SetTemperature(293.15);
         gas->LoadIonMobility(getIonMobilityDir(medium));
-        gas->SetMaxElectronEnergy(200);
+        gas->SetMaxElectronEnergy(2000);
     }
     catch(MediumMagboltzFactoryException const &e) {
         throw e;
@@ -36,6 +36,7 @@ std::unique_ptr<Garfield::MediumMagboltz> MediumMagboltzFactory::createGasMixtur
     try {
         gas = createGasMixture(medium, fracMedium, quenching, fracQuencher);
         gas->EnablePenningTransfer(penningEff, penningLamb, medium);
+        gas->SetMaxElectronEnergy(2000);
     }
     catch(MediumMagboltzFactoryException const &e) {
         throw e;
@@ -48,6 +49,7 @@ std::unique_ptr<Garfield::MediumMagboltz> MediumMagboltzFactory::createFromGasFi
     unique_ptr<MediumMagboltz> gas(new MediumMagboltz());
     if(!gas->LoadGasFile(gasFileName, quite))
         throw MediumMagboltzFactoryException("Failed to load a gas file \"" + gasFileName + "\".");
+    gas->SetMaxElectronEnergy(2000);
     return move(gas);
 }
 

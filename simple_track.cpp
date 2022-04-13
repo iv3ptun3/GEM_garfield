@@ -22,13 +22,11 @@
 #include "SrimTrackBuilder.hpp"
 using namespace Garfield;
 
-std::unique_ptr<MediumMagboltz> initGasMixture(const ParManager *parMan);
-
 int main(int argc, char *argv[])
 {
     if (argc != 4)
     {
-        std::cout << "Usage : tgem_track [parameter file] [outfile] [nEvent]" << std::endl;
+        std::cout << "Usage : simple_track [parameter file] [outfile] [nEvent]" << std::endl;
         return 0;
     }
     bool driftIons = false;
@@ -40,6 +38,7 @@ int main(int argc, char *argv[])
     // Initializing a global manager for configure parameters.
     auto parMan = ParManager::getInstance();
     parMan->initPars(argv[1]); 
+    parMan->listPars();
     // tripple gem dimension
     const double pitch = parMan->getParD("PITCH");
     const double tD = parMan->getParD("T_DIEL");
@@ -62,8 +61,11 @@ int main(int argc, char *argv[])
     const double bField = parMan->getParD("B_Z");
     // elmer data name
     const std::string fmFileName = parMan->getParS("SCRIPT_NAME");
-    
-    std::unique_ptr<MediumMagboltz> gas = initGasMixture(parMan);
+    const string scriptDir = parMan->getParS("SCRIPT_NAME");
+    const string gasFileName = parMan->getParS("GAS_FILE");
+    const string srimFileName = parMan->getParS("SRIM_FILE");
+
+    unique_ptr<MediumMagboltz> gas = MediumMagboltzFactory::createFromGasFile(gasFileName);
 
     std::unique_ptr<ComponentConstant> componentDrift = ComponentFactory::createConstE(
         gas.get(), eDrift,
@@ -80,6 +82,7 @@ int main(int argc, char *argv[])
     sensor.SetArea(-tpcX / 2, -tpcY / 2, dZp + dZ12 + dZ23 + dZu, tpcX / 2, tpcY / 2, dZp + dZ12 + dZ23 + dZu + dZe);
     
     AvalancheMicroscopic aval;
+    
     aval.SetSensor(&sensor);
     aval.EnableMagneticField(magneticFieldOn);
     
@@ -87,16 +90,15 @@ int main(int argc, char *argv[])
     drift.SetSensor(&sensor);
     drift.SetDistanceSteps(2.e-4);
 
+
+    string gas1 = parMan->getParS("GAS1"), gas2 = parMan->getParS("GAS2");
+    int frac1 = parMan->getParI("FRAC1"), frac2 = parMan->getParI("FRAC2");
     // build TrackSrim instance
-    SrimTrackBuilder stBuilder(parMan->getParS("SRIM_DATA"));
-    stBuilder.addCompound(parMan->getParS("GAS_MEDIUM"), parMan->getParD("GAS_MEDIUM_FRAC"),
-                          parMan->getParD("GAS_MEDIUM_A"), parMan->getParD("GAS_MEDIUM_Z"), 
-                          parMan->getParD("GAS_MEDIUM_FANO"), parMan->getParD("GAS_MEDIUM_WORK"));
-    stBuilder.addCompound(parMan->getParS("GAS_QUENCHING"), parMan->getParD("GAS_QUENCHING_FRAC"),
-                          parMan->getParD("GAS_QUENCHING_A"), parMan->getParD("GAS_QUENCHING_Z"), 
-                          parMan->getParD("GAS_QUENCHING_FANO"), parMan->getParD("GAS_QUENCHING_WORK"));
-    stBuilder.print();
-    TrackSrim *track = stBuilder.build(&sensor);
+    SrimTrackBuilder stBuilder;
+    stBuilder.setSrimFileName(srimFileName);
+    stBuilder.setPressure(parMan->getParI("PRESSURE"));
+    stBuilder.setComposition(gas1, frac1, gas1, frac2);
+    auto track = stBuilder.build(&sensor);
     track->SetKineticEnergy(5.e6);
     track->SetTargetClusterSize(100);
 
@@ -134,15 +136,4 @@ int main(int argc, char *argv[])
     driftView.Plot();
     app.Run(true);
     return 0;
-}
-
-std::unique_ptr<MediumMagboltz> initGasMixture(const ParManager *parMan)
-{
-    auto gas = MediumMagboltzFactory::createGasMixture(
-        parMan->getParS("GAS_MEDIUM"), parMan->getParD("GAS_MEDIUM_FRAC"),
-        parMan->getParS("GAS_QUENCHING"), parMan->getParD("GAS_QUENCHING_FRAC"));
-    gas->SetPressure(parMan->getParD("GAS_PRESSURE"));
-    gas->EnablePenningTransfer(parMan->getParD("GAS_PENNING_EFF"), parMan->getParD("GAS_PENNING_LAMB"), parMan->getParS("GAS_MEDIUM"));
-    gas->Initialise(true);
-    return std::move(gas);
 }

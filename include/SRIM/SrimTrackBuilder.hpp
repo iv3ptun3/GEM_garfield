@@ -3,43 +3,48 @@
 
 #include "Garfield/TrackSrim.hh"
 #include "Garfield/Sensor.hh"
+#include "Garfield/MediumMagboltz.hh"
 
 #include <string>
-
-using namespace Garfield;
-using namespace std;
+#include <memory>
 
 // this builder class builds Garfield::TrackSrim instance.
-class SrimTrackBuilder{
+class SrimTrackBuilder {
     public:
-        SrimTrackBuilder();
-        SrimTrackBuilder(const string &srimFile);
-        
-        virtual ~SrimTrackBuilder(){}
+    SrimTrackBuilder();
+    SrimTrackBuilder(const std::string &srimFile);
 
-        SrimTrackBuilder* addCompound(const string &name, const double frac, const double A, const double Z,  const double fano, const double work);
-        void clearCompounds();
-        
-        void print();
+    virtual ~SrimTrackBuilder() {}
 
-        void setModel(const int model){fModel = model;}
-        // Build a TrackSrim instance and return its pointer.
-        // Desruction of an instance is an users reponsibility.
-        TrackSrim* build(Sensor *sensor = nullptr);
-        
+    // Build a TrackSrim instance and return its pointer.
+    // Desruction of an instance is an users reponsibility.
+    std::unique_ptr<Garfield::TrackSrim> build(Garfield::Sensor *sensor = nullptr);
+
+    void setPressure(int pressure);
+
+    void setComposition(
+        const std::string gas1, int frac1 = 100,
+        const std::string gas2 = "", int frac2 = 0,
+        const std::string gas3 = "", int frac3 = 0,
+        const std::string gas4 = "", int frac4 = 0);
+    void setComposition(
+        const std::string gas1, double frac1 = 1.,
+        const std::string gas2 = "", double frac2 = 0.,
+        const std::string gas3 = "", double frac3 = 0.,
+        const std::string gas4 = "", double frac4 = 0.);
+    void reset();
+    void print();
+    void setModel(const int model) { fModel = model; }
+    void setSrimFileName(const std::string srimFile) { fSrimFile = srimFile; }
+
+
+    bool gasIntialized() const;
+
     private:
-        // update all fields by calculating efficient constant.
-        void update();
-        const double weightedAvarage(const vector<double> &vec, const vector<double> &w) const;
+
     private:
-        string fSrimFile;
-        double fEffAtomicMass, fEffAtomicNum, fEffFanoFactor, fEffWorkFunction;
-        int fModel;
-        int fNumberOfCompounds;
-        vector<string> fNames;
-        vector<double> fFractions, fAtomicMasses, fAtomicNums, fFanoFactors, fWorkFuncions;
-        // to check the sum of fractions to be 100 %
-        static constexpr double kFracSumTol = 1e-3;
+    std::unique_ptr<Garfield::MediumMagboltz> gas;
+    std::string fSrimFile;
+    int fModel;
 };
-
 #endif // SRIMTRACKBUILDER_HPP

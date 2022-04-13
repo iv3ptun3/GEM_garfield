@@ -70,6 +70,17 @@ double ParManager::getParD(const string parName) const
     return atof(it->second.data());
 }
 
+int ParManager::getParI(const string parName) const
+{
+    auto it = fParMap.find(parName);
+    if(it == fParMap.end())
+    {
+        std::string message = "A parameter " + parName + " is not registered.";
+        printError("ParManager", "getParD(const string)", message);
+        return 0.;
+    }
+    return atoi(it->second.data());
+}
 
 std::string ParManager::getParS(const string parName) const
 {

@@ -23,8 +23,6 @@ using namespace Garfield;
 
 constexpr unsigned int BUFF_AVALANCHE = 1000000;
 
-std::unique_ptr<MediumMagboltz> initGasMixture(const ParManager *parMan);
-
 int main(int argc, char *argv[])
 {
     if (argc != 4)
@@ -63,8 +61,9 @@ int main(int argc, char *argv[])
     const double bField = parMan->getParD("B_Z");
     // elmer data name
     const std::string fmFileName = parMan->getParS("SCRIPT_NAME");
-
-    std::unique_ptr<MediumMagboltz> gas = initGasMixture(parMan);
+    const std::string gasFileName = parMan->getParS("GAS_FILE");
+    
+    std::unique_ptr<MediumMagboltz> gas = MediumMagboltzFactory::createFromGasFile(gasFileName);
 
     std::unique_ptr<ComponentElmer> componentGem = ComponentFactory::createElmer(gas.get(), fmFileName);
     std::unique_ptr<ComponentConstant> componentDrift = ComponentFactory::createConstE(
@@ -151,15 +150,4 @@ int main(int argc, char *argv[])
     delete parMan;
     freeDriftEndPointsPtr(&endPoints);
     return 0;
-}
-
-std::unique_ptr<MediumMagboltz> initGasMixture(const ParManager *parMan)
-{
-    auto gas = MediumMagboltzFactory::createGasMixture(
-        parMan->getParS("GAS_MEDIUM"), parMan->getParD("GAS_MEDIUM_FRAC"),
-        parMan->getParS("GAS_QUENCHING"), parMan->getParD("GAS_QUENCHING_FRAC"));
-    gas->SetPressure(parMan->getParD("GAS_PRESSURE"));
-    gas->EnablePenningTransfer(parMan->getParD("GAS_PENNING_EFF"), parMan->getParD("GAS_PENNING_LAMB"), parMan->getParS("GAS_MEDIUM"));
-    gas->Initialise(true);
-    return std::move(gas);
 }

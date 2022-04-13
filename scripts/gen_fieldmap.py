@@ -3,7 +3,11 @@
 #!/usr/bin/env python
 import os
 import sys
-sys.path.append("../scripts/")
+
+absPath = os.path.realpath(__file__)
+absPath = absPath[:absPath.rfind("/")]
+absPath = absPath[:absPath.rfind("/")]
+sys.path.append(absPath + "/pysource/")
 import parManager as pr
 
 if len(sys.argv) != 2 or "--help" in sys.argv:
@@ -31,3 +35,6 @@ print("Solving field equation using ElmerSolver..., ", end="")
 os.system("ElmerSolver " + scriptName + ".sif >> " + scriptName + "/log_sol.txt")
 print("Done. Logs are saved as " + scriptName + "/log_sol.txt file")
 print("---------------------------------------------------------------------------------------------")
+
+print("Deleting unnecessary files...")
+os.system("rm -rf " + scriptName + ".msh " + scriptName + ".sif " + scriptName + ".geo")

@@ -1,0 +1,118 @@
+# parameter files for a triple GEM simulations
+# information must be given in order of 
+# parameter name, value, id
+# The unit of length is cm.
+# The unit of electric field is V/cm.
+# The unit of voltage is V.
+
+# A field map file of a triple GEM structure(region between upper boundary plane and pad plane)
+# are calculated using Gmsh and Elmer.
+# In the other hand, a field between electrode and upper boundary plane is considered constant.s
+
+# ---------------------------------- electrode
+# |   /\
+# |  /  \ 
+# |    |
+# |    |
+# |    |    DZ_ELECTRODE(Drift region of Constant analytic E-field)
+# |    |    
+# |    |   
+# |    |
+# |  \  /
+# |   \/
+# ---------------------------------- upper boundary plane between constant field and a triple GEM field.
+# |   /\
+# |  /  \ 
+# |    |
+# |    |
+# |    |    DZ_UPPERPLANE
+# |  \  /
+# |   \/
+# ---------------------------------- GEM1
+# ---------------------------------- DV_GEM1
+# |   /\
+# |  /  \ 
+# |    |
+# |    |
+# |    |    DZ_GEM12
+# |  \  /
+# |   \/
+# ---------------------------------- GEM2
+# ---------------------------------- DV_GEM2
+# |   /\
+# |  /  \ 
+# |    |
+# |    |
+# |    |    DZ_GEM23
+# |  \  /
+# |   \/
+# ---------------------------------- GEM3
+# ---------------------------------- DV_GEM3
+# |   /\
+# |  /  \ 
+# |    |
+# |    |
+# |    |    DZ_PADPLANE
+# |  \  /
+# |   \/
+# ---------------------------------- pad plane(z = 0)
+
+# script prefix
+SCRIPT_NAME {SCRIPT_NAME}
+
+# relative permitivity of materials
+PER_GAS         1
+PER_COPPER      1e10
+PER_INSULATOR   3.5
+
+# GEM dimensions
+R_INNER         0.0025
+R_OUTER         0.0035
+R_ETCH          0.0040
+PITCH           0.0140
+T_COPPER        0.0005
+T_DIEL          0.0050
+
+# TPC dimensions
+TPC_X       10
+TPC_Y       10
+
+# Distance between GEMs, pad plane and upper boundary plane
+DZ_ELECTRODE        {DZ_DRIFT}
+DZ_UPPERPLANE       {DZ_UG1}
+DZ_GEM12            {DZ_G12}
+DZ_GEM23            {DZ_G23}
+DZ_PADPLANE         {DZ_G3D}
+
+# Mesh sizes at the given points
+MSIZE_DRIFT                 0.005
+MSIZE_ETCH_HOLE             0.0008
+MSIZE_DIEL_INNER_HOLE       0.0010
+MSIZE_DIEL_OUTER_HOLE       0.0015
+MSIZE_HOLE_CENTER           0.0025
+
+# Electric field
+E_DRIFT             {E_DRIFT}
+E_TRANS             {E_TRANS}
+E_INDUCTION         {E_INDUCTION}
+
+# Magnetic field
+B_X                 0.
+B_Y                 0.
+B_Z                 {B_Z}
+
+# Voltage differences between copper layers of GEMs
+DV_GEM1             {V_GEM1}
+DV_GEM2             {V_GEM2}
+DV_GEM3             {V_GEM3}
+
+# gas
+GAS1                {GAS1}
+GAS2                {GAS2}
+FRAC1               {FRAC1}
+FRAC2               {FRAC2}
+
+# data files
+# To do : generate SRIM data files
+SRIM_FILE           {SRIM_FILE}
+GAS_FILE            {GAS_FILE}
