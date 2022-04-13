@@ -44,7 +44,7 @@ Usage : python3 gen_parfile.py <name> [parName=parValue]
 
 paramPack = {"SCRIPT_NAME" : "",
 "E_DRIFT" : 150, "E_TRANS" : 1500, "E_INDUCTION" : 1500,
-"B_Z" : 0,
+"B_Z" : 0.,
 "V_GEM1" : 100, "V_GEM2" : 100, "V_GEM3" : 100,
 "GAS1" : "He", "GAS2" : "iC4H10", "FRAC1" : 90, "FRAC2" : 10,
 "PRESSURE" : 76,
@@ -79,7 +79,6 @@ for arg in sys.argv[2:]:
 # formatting SRIM and gas file
 srimFileName = absPath + "/resources/SRIM/{GAS1}_{FRAC1:02d}_{GAS2}_{FRAC2:02d}_{PRESSURE:04d}.txt".format(**paramPack)
 gasFileName = absPath + "/resources/gas_file/{GAS1}_{FRAC1:02d}_{GAS2}_{FRAC2:02d}_{PRESSURE:04d}.gas".format(**paramPack)
-
 
 templateFile = open(absPath  + "/templates/parameter_template.txt", "r")
 parLines = templateFile.readlines()
