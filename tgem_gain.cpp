@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     // analyzers
     RunAnalyzer runAna;
     GainEventAnalyzer eventAna(&aval);
-    runAna.Open(scriptDir + "/" + scriptDir + ".root");
+    runAna.Open(scriptDir + "/out.root");
     runAna.SetEventAnalyzer(&eventAna);
     runAna.SaveByEvent();
     // event loop
@@ -91,8 +91,8 @@ int main(int argc, char *argv[])
             break;
         }
         aval.AvalancheElectron(
-            0., 0., dZp + dZ12 + dZ23 + dZu * 0.999,
-            0., 0.1, 0., 0., 0.);
+            0., 0., dZp + dZ12 + dZ23 + dZu/20.,
+            0., 0., 0., 0., 0.);
         runAna.ProcessEvent();
     }
     runAna.Write();

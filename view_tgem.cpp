@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
     // avalanching an electron
     const double x0 = 0.;
     const double y0 = 0.;
-    const double z0 = dZp + dZ12 + dZ23 + dZu * 0.999; 
+    const double z0 = dZp + dZ12 + dZ23 + dZu*0.99; 
     const double t0 = 0.;
     const double e0 = 0.1;
     aval.AvalancheElectron(x0, y0, z0, t0, e0, 0., 0., 0.);

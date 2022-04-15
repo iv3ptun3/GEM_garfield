@@ -13,7 +13,6 @@ ParManager::~ParManager()
 {
     fInstance = nullptr;
     fParMap.clear();
-    cout << "Fuck" << endl; 
 }
 
 ParManager* ParManager::getInstance()

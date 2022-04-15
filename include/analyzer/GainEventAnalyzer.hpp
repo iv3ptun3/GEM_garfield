@@ -11,6 +11,12 @@
 #include <memory>
 
 class GainEventAnalyzer : public IEventAnalyzer {
+    private:
+    struct Response{
+        long long gain;
+        float x_m, y_m, x_s, y_s;
+    };
+
     public:
     GainEventAnalyzer(Garfield::AvalancheMicroscopic *aval);
 
@@ -26,9 +32,11 @@ class GainEventAnalyzer : public IEventAnalyzer {
     std::unique_ptr<TTree> treeGain;
     std::unique_ptr<TH1D> xHist, yHist, tHist;
 
-    int gain;
-    int ne, ni;
-    long long evtId;
+    Response response;
+
+    long long evtId, iEvtId; // intersted event
+    
+
 };
 
 #endif // GAINEVENTANALYZER_HPP
