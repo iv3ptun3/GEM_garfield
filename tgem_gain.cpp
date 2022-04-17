@@ -18,9 +18,11 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    if (argc != 3)
+    if (argc < 2 || argc > 4)
     {
-        cout << "Usage : tgem_gain [parameter file] [nEvent]" << endl;
+        cerr << "Usage : tgem_gain <parameter file> <nEvents> [<B_Z>] " << endl;
+        cerr << "   Options:" << endl;
+        cerr << "       <B_Z> : B-field in T. If not provided, the value is extracted from the paramter file." << endl;
         return 0;
     }
     const string parFileName = argv[1];
@@ -48,7 +50,11 @@ int main(int argc, char *argv[])
     const double eDrift = parMan->getParD("E_DRIFT");
     const double eInduction = parMan->getParD("E_INDUCTION");
     // magnetic field
-    const double bField = parMan->getParD("B_Z");
+    double bField = parMan->getParD("B_Z");
+    if(argc == 4)
+    {   
+        bField = atof(argv[3]);
+    }
     // elmer data name
     const string scriptDir = parMan->getParS("SCRIPT_NAME");
     const string gasFileName = parMan->getParS("GAS_FILE");
