@@ -1,8 +1,12 @@
-if [ $# -ne 2 ];then
-    echo "Usage : ./gen_all.sh [parameter file]"
-elif [ ! -e ${1} ];then
-    echo "Parameter file ${1} does not exist."
-fi
+for parFile in $@
+do
+	if [ ! -e ${parFile} ]; then
+		echo "Parameter file ${parFile} does not exist."
+	else
+		echo "----------------------------------------------------------------------------"
+		echo "Processing ${parFile}"
+		python3 scripts/gen_scripts.py ${parFile} -all
+		python3 scripts/gen_fieldmap.py ${parFile}
+	fi
+done
 
-python3 scripts/gen_scripts.py ${1} -all
-python3 scripts/gen_fieldmap.py ${1}

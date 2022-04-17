@@ -56,13 +56,14 @@ int main(int argc, char *argv[])
     unique_ptr<MediumMagboltz> gas = MediumMagboltzFactory::createFromGasFile(gasFileName);
 
     unique_ptr<ComponentElmer> componentGem = ComponentFactory::createElmer(gas.get(), scriptDir);
-    unique_ptr<ComponentConstant> componentConst = ComponentFactory::createConstB(gas.get(), 2.5
+    unique_ptr<ComponentConstant> componentConst = ComponentFactory::createConstB(gas.get(), bField
         , -tpcX/2, -tpcY/2, 0, tpcX/2, tpcY/2, dZp + dZ12 + dZ23 + dZu);
 
     // Create the sensor.
     Sensor sensor;
     sensor.AddComponent(componentGem.get());
-    sensor.AddComponent(componentConst.get());
+    if(bField > 0.0)
+		sensor.AddComponent(componentConst.get());
     sensor.SetArea(-tpcX/2, -tpcY/2, 0, tpcX/2, tpcY/2, dZp + dZ12 + dZ23 + dZu);
 
     AvalancheMicroscopic aval;

@@ -26,8 +26,8 @@ def PrintUsage():
 Usage : python3 gen_parfile.py <name> [parName=parValue]
     Possible optional parameter list (default value)
         E_DRIFT     : Drift field in V/cm (150)
-        E_TRANS     : Transition field in V/cm (1500)
-        E_INDUCTION : Induction field in V/cm (1500)
+        E_TRANS     : Transition field in V/cm (150)
+        E_INDUCTION : Induction field in V/cm (150)
         B_Z         : Magnetic field in T (0)
         V_GEM1,2,3  : Voltage of GEM1,2,3 in V (100)
     Gas mixture name must be valid to load the gas file.
@@ -43,7 +43,7 @@ Usage : python3 gen_parfile.py <name> [parName=parValue]
 """)     
 
 paramPack = {"SCRIPT_NAME" : "",
-"E_DRIFT" : 150, "E_TRANS" : 1500, "E_INDUCTION" : 1500,
+"E_DRIFT" : 150, "E_TRANS" : 150, "E_INDUCTION" : 150,
 "B_Z" : 0.,
 "V_GEM1" : 100, "V_GEM2" : 100, "V_GEM3" : 100,
 "GAS1" : "He", "GAS2" : "iC4H10", "FRAC1" : 90, "FRAC2" : 10,
@@ -84,6 +84,8 @@ templateFile = open(absPath  + "/templates/parameter_template.txt", "r")
 parLines = templateFile.readlines()
 parTxt = "".join(parLines).format(**paramPack, SRIM_FILE=srimFileName, GAS_FILE=gasFileName)
 templateFile.close()
+print("------------------ Generated Parameter File ------------------------")
+print(parTxt)
 parameterFile = open("./" + paramPack["SCRIPT_NAME"] + ".txt", "w")
 parameterFile.write(parTxt)
 parameterFile.close()
