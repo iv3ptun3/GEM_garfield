@@ -8,11 +8,13 @@
 #include "Garfield/ViewMedium.hh"
 
 #include "TApplication.h"
-
+#include "TGraph.h"
+#include "TH1F.h"
 #include "MediumMagboltzFactory.hpp"
 
 
 using namespace Garfield;
+using namespace std;
 
 void PrintUsage()
 {
@@ -84,15 +86,19 @@ int main(int argc, char *argv[])
     MediumMagboltz *gas = new MediumMagboltz();
     if(!gas->LoadGasFile(gasFileName))
     {
+        cerr << "Failed to load gas file : " + gasFileName << endl;
         return -1;
     }
+    vector<double> eField, bField, angle;
+    gas->GetFieldGrid(eField, bField, angle);
+    double eMin = eField.front(), eMax = eField.back();
+    double bMin = bField.front(), bMax = bField.back();
     std::cout << "Start plotting..." << std::endl;
     TApplication app("app", &argc, argv);
     ViewMedium mediumView;
     mediumView.SetMedium(gas);
-    mediumView.SetRangeE(100., 2000., false);
-    mediumView.SetRangeB(0., 2.5, false);
-
+    mediumView.SetRangeE(eMin, eMax, false);
+    mediumView.SetRangeB(bMin, bMax, false);
     for(int i = 0;i < nPlots;++i)
     {
         if(plotOpts[i] == 'e')
