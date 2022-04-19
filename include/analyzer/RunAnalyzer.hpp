@@ -46,7 +46,7 @@ class RunAnalyzer {
     {
         if(!IsOpened())
             throw Exception("Root file not opened.");
-        file->Write();
+        file->Write(nullptr, TObject::kOverwrite);
     }
 
     bool IsOpened() const
