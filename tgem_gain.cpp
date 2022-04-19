@@ -18,15 +18,16 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2 || argc > 4)
+    if (argc < 4 || argc > 5)
     {
-        cerr << "Usage : tgem_gain <parameter file> <nEvents> [<B_Z>] " << endl;
+        cerr << "Usage : tgem_gain <parameter file> <nEvents> <output> [<B_Z>] " << endl;
         cerr << "   Options:" << endl;
         cerr << "       <B_Z> : B-field in T. If not provided, the value is extracted from the paramter file." << endl;
         return 0;
     }
     const string parFileName = argv[1];
     const unsigned int nEvt = atoi(argv[2]);
+	const string outFile = argv[3];
 
     // Initializing a global manager for configure parameters.
     auto parMan = ParManager::getInstance();
@@ -51,9 +52,9 @@ int main(int argc, char *argv[])
     const double eInduction = parMan->getParD("E_INDUCTION");
     // magnetic field
     double bField = parMan->getParD("B_Z");
-    if(argc == 4)
+    if(argc == 5)
     {   
-        bField = atof(argv[3]);
+        bField = atof(argv[4]);
     }
     // elmer data name
     const string scriptDir = parMan->getParS("SCRIPT_NAME");
@@ -84,7 +85,7 @@ int main(int argc, char *argv[])
     // analyzers
     RunAnalyzer runAna;
     GainEventAnalyzer eventAna(&aval);
-    runAna.Open(scriptDir + "/out.root");
+    runAna.Open(scriptDir + "/" + outFile);
     runAna.SetEventAnalyzer(&eventAna);
     runAna.SaveByEvent();
     // event loop
