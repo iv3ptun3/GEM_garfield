@@ -29,8 +29,8 @@ class GainEventAnalyzer : public IEventAnalyzer {
 
     private:
     const Garfield::AvalancheMicroscopic *aval;
-    std::unique_ptr<TTree> treeGain;
-    std::unique_ptr<TH1D> xHist, yHist, tHist;
+    TTree *treeGain;
+    TH1D *xHist, *yHist, *tHist;
 
     Response response;
 

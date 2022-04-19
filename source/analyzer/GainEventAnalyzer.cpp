@@ -15,11 +15,11 @@ void GainEventAnalyzer::Init()
 {
     evtId = 0;
     iEvtId = 0;
-    treeGain = make_unique<TTree>("tree", "electron statistics");
+    treeGain = new TTree("tree", "electron statistics");
     treeGain->Branch("response", &response, "ne/l:x_m/F:y_m:x_s:y_s");
-    xHist = make_unique<TH1D>("xHist", "x position", 10000, -0.2, 0.2);
-    yHist = make_unique<TH1D>("yHist", "y position", 10000, -0.2, 0.2);
-    tHist = make_unique<TH1D>("tHist", "arrival time", 10000, 0., 10.);
+    xHist = new TH1D("xHist", "x position", 10000, -0.2, 0.2);
+    yHist = new TH1D("yHist", "y position", 10000, -0.2, 0.2);
+    tHist = new TH1D("tHist", "arrival time", 10000, 0., 10.);
 }
 
 void GainEventAnalyzer::AnalyzeEvent()
