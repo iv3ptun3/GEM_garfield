@@ -1,4 +1,5 @@
 *.config
-build/
+build
+gain_data/
 .vscode/
-pysource/__pycache__/
+__pycache__
