@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
     AvalancheMicroscopic aval;
     aval.SetSensor(&sensor);
     aval.SetTimeWindow(0., 10e3);
+	aval.EnableAvalancheSizeLimit(500000);
 
     AvalancheMC drift;
     drift.SetSensor(&sensor);
