@@ -1,11 +1,12 @@
 Written by Hyunmin Yang, HANUL, Korea University.
+Updated by Haein Lee, HANUL, Korea University.
 
-This program simulates AT-TPC(Active Target Time Projection Chamber) with tripple GEMs.
+This program simulates TPC(Time Projection Chamber) with tripple GEMs.
 Interation between charged particles and gas medium will be simulated with Geant4.
 Drift and multiplication of electrons ionized by charged particle will be simulated with Garfield++.
 
 # Environment
-Ubuntu or MaxOs(maybe?).
+Ubuntu or MacOs(maybe?).
 
 # Prerequisites
 - ROOT version 6  
