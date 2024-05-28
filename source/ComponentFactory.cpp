@@ -1,7 +1,9 @@
 #include <cstdlib>
 #include <string>
+#include <sstream>
 #include "Garfield/SolidBox.hh"
 #include "Garfield/GeometrySimple.hh"
+#include <unistd.h>
 
 #include "ComponentFactory.hpp"
 

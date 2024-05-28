@@ -36,5 +36,5 @@ os.system("ElmerSolver " + scriptName + ".sif >> " + scriptName + "/log_sol.txt"
 print("Done. Logs are saved as " + scriptName + "/log_sol.txt file")
 print("---------------------------------------------------------------------------------------------")
 
-print("Deleting unnecessary files...")
-os.system("rm -rf " + scriptName + ".msh " + scriptName + ".sif " + scriptName + ".geo")
+#print("Deleting unnecessary files...")
+#os.system("rm -rf " + scriptName + ".msh " + scriptName + ".sif " + scriptName + ".geo")

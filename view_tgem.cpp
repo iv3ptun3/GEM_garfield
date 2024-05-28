@@ -79,12 +79,14 @@ int main(int argc, char *argv[])
     vf.SetArea(-1.5 * pitch, dZp + dZ12 + dZ23 - 3 * tD, 1.5 * pitch, dZp + dZ12 + dZ23 + 3 * tD);
     vf.PlotContour();
 
+
     vf.SetCanvas(cf2);
     vf.SetVoltageRange(
         -dZp * eInduction - dvg1 - dZ12 * eTrans - 1.5 * dvg2,
         -dZp * eInduction - dvg1 - dZ12 * eTrans + 1.5 * dvg2);
     vf.SetArea(-1.5 * pitch, dZp + dZ12 - 3 * tD, 1.5 * pitch, dZp + dZ12 + 3 * tD);
     vf.PlotContour();
+
 
     vf.SetCanvas(cf3);
     vf.SetVoltageRange(
@@ -93,11 +95,12 @@ int main(int argc, char *argv[])
     vf.SetArea(-1.5 * pitch, dZp - 3 * tD, 1.5 * pitch, dZp + 3 * tD);
     vf.PlotContour();
 
+
     vf.SetCanvas(cf4);
     vf.SetVoltageRange(-dZp * eInduction - dvg3 - dZ23 * eTrans - dvg2 - dZ12 * eTrans - dvg1 - dZu*eDrift, 0.);
     vf.SetArea(-tpcX/2, 0, tpcX/2, dZp + dZ12 + dZ23 + dZu);
     vf.PlotContour();
-    
+
 
     // simulating avalanche of an electron.
     ViewDrift driftView;
@@ -106,18 +109,23 @@ int main(int argc, char *argv[])
     sensor.SetArea(-tpcX / 2, -tpcY / 2, 0., tpcX / 2, tpcY / 2, dZp + dZ12 + dZ23 + dZu);
     sensor.AddComponent(componentGem.get());
 
+
     // drift of ions
     AvalancheMC drift;
+    /*
     drift.EnablePlotting(&driftView);
     drift.SetSensor(&sensor);
-    // drift.EnableMagneticField(true);
+    //drift.EnableMagneticField(true);
     drift.SetCollisionSteps(2.e-4);
+    */
+
 
     AvalancheMicroscopic aval;
     aval.EnablePlotting(&driftView);
     aval.SetSensor(&sensor);
     // set the number of steps to be skipped when plotting.
     aval.SetCollisionSteps(100);
+
 
     // avalanching an electron
     const double x0 = 0.;
