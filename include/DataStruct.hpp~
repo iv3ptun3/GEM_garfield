@@ -3,7 +3,6 @@
 
 #include "Errors.hpp"
 #include "Garfield/Track.hh"
-#include "Garfield/TrackHeed.hh"
 
 // data structure containing ionized electrons clusters at points on the track.
 typedef struct
@@ -50,7 +49,7 @@ static void allocateTrackClustersPtr(TrackClustersPtr *trackClusters, unsigned i
     }
 }
 
-static void fillTrackClustersPtr(Garfield::TrackHeed *track, TrackClustersPtr *clusters)
+static void fillTrackClustersPtr(Garfield::Track *track, TrackClustersPtr *clusters)
 {
     unsigned int ptr = 0;
     double extra = 0;

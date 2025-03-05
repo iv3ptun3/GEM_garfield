@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
 
     TApplication app("app", &argc, argv);
 
+/*
     // plot equipotential lines of GEM1
     TCanvas *cf1 = new TCanvas("cf1", "Potential plot of GEM1", 600, 600); cf1->SetLeftMargin(0.16);
     TCanvas *cf2 = new TCanvas("cf2", "Potential plot of GEM2", 600, 600); cf2->SetLeftMargin(0.16);
@@ -101,6 +102,7 @@ int main(int argc, char *argv[])
     vf.SetArea(-tpcX/2, 0, tpcX/2, dZp + dZ12 + dZ23 + dZu);
     vf.PlotContour();
 
+*/
 
     // simulating avalanche of an electron.
     ViewDrift driftView;
@@ -112,10 +114,12 @@ int main(int argc, char *argv[])
 
     // drift of ions
     AvalancheMC drift;
+
+    drift.SetSensor(&sensor);
+    
     /*
     drift.EnablePlotting(&driftView);
-    drift.SetSensor(&sensor);
-    //drift.EnableMagneticField(true);
+    drift.EnableMagneticField(true);
     drift.SetCollisionSteps(2.e-4);
     */
 
@@ -128,33 +132,46 @@ int main(int argc, char *argv[])
 
 
     // avalanching an electron
+
+    const int numElectrons = 10;    // added by hjb
+    int totalElectrons = 0;
+
     const double x0 = 0.;
+    //const double x0 = 0.5;
     const double y0 = 0.;
     const double z0 = dZp + dZ12 + dZ23 + dZu*0.99; 
     const double t0 = 0.;
     const double e0 = 0.1;
-    aval.AvalancheElectron(x0, y0, z0, t0, e0, 0., 0., 0.);
-    int ne = 0, ni = 0;
-    aval.GetAvalancheSize(ne, ni);
-    const unsigned int np = aval.GetNumberOfElectronEndpoints();
-    double xe1, ye1, ze1, te1, e1;
-    double xe2, ye2, ze2, te2, e2;
-    double xi1, yi1, zi1, ti1;
-    double xi2, yi2, zi2, ti2;
-    int status;
-    for (unsigned int j = 0; j < np; ++j) {
-      aval.GetElectronEndpoint(j, xe1, ye1, ze1, te1, e1, 
-                                  xe2, ye2, ze2, te2, e2, status);
-      drift.DriftIon(xe1, ye1, ze1, te1);
-      drift.GetIonEndpoint(0, xi1, yi1, zi1, ti1, 
-                              xi2, yi2, zi2, ti2, status);
-    }
-    std::cout << " The size of avalanche : " << ne << "\n";
 
-    TCanvas *cd1 = new TCanvas("cd1", "Drift line of GEM1", 600, 600);cd1->SetLeftMargin(0.16);
-    TCanvas *cd2 = new TCanvas("cd2", "Drift line of GEM2", 600, 600);cd2->SetLeftMargin(0.16);
-    TCanvas *cd3 = new TCanvas("cd3", "Drift line of GEM3", 600, 600);cd3->SetLeftMargin(0.16);
-    TCanvas *cd4 = new TCanvas("cd4", "Drift line", 600, 600);cd4->SetLeftMargin(0.16);
+
+    for( int i = 0; i < numElectrons; i++){     // added by hjb
+        aval.AvalancheElectron(x0, y0, z0, t0, e0, 0., 0., 0.);
+        int ne = 0, ni = 0;
+        aval.GetAvalancheSize(ne, ni);
+        const unsigned int np = aval.GetNumberOfElectronEndpoints();
+        double xe1, ye1, ze1, te1, e1;
+        double xe2, ye2, ze2, te2, e2;
+        double xi1, yi1, zi1, ti1;
+        double xi2, yi2, zi2, ti2;
+        int status;
+        for (unsigned int j = 0; j < np; ++j) {
+            aval.GetElectronEndpoint(j, xe1, ye1, ze1, te1, e1, 
+                                  xe2, ye2, ze2, te2, e2, status);
+            drift.DriftIon(xe1, ye1, ze1, te1);
+            drift.GetIonEndpoint(0, xi1, yi1, zi1, ti1, 
+                              xi2, yi2, zi2, ti2, status);
+        }
+        totalElectrons += ne;   // added by hjb
+
+        std::cout <<"Iteration" << i << " The size of avalanche : " << ne << "\n";
+    }
+    std::cout << "Total electrons generated: " << totalElectrons << "\n";   // added by hjb
+
+    // originally 600 > 1000
+    TCanvas *cd1 = new TCanvas("cd1", "Drift line of GEM1", 1000, 1000);cd1->SetLeftMargin(0.16);
+    TCanvas *cd2 = new TCanvas("cd2", "Drift line of GEM2", 1000, 1000);cd2->SetLeftMargin(0.16);
+    TCanvas *cd3 = new TCanvas("cd3", "Drift line of GEM3", 1000, 1000);cd3->SetLeftMargin(0.16);
+    TCanvas *cd4 = new TCanvas("cd4", "Drift line", 1000, 1000);cd4->SetLeftMargin(0.16);
 
     ViewFEMesh meshView;
     meshView.SetComponent(componentGem.get());
@@ -170,7 +187,8 @@ int main(int argc, char *argv[])
     meshView.EnableAxes();
 
     meshView.SetCanvas(cd1);
-    meshView.SetArea(-1.5 * pitch, dZp + dZ12 + dZ23 - 3 * tD, 1.5 * pitch, dZp + dZ12 + dZ23 + 3 * tD);
+    // original 1.5 >  0.3
+    meshView.SetArea(-3 * pitch, dZp + dZ12 + dZ23 - 3 * tD, 3 * pitch, dZp + dZ12 + dZ23 + 3 * tD);
     meshView.Plot();
 
     meshView.SetCanvas(cd2);
@@ -182,7 +200,8 @@ int main(int argc, char *argv[])
     meshView.Plot();
 
     meshView.SetCanvas(cd4);
-    meshView.SetArea(-tpcX/2, 0, tpcX/2, dZp + dZ12 + dZ23 + dZu);
+    meshView.SetArea(-10 * pitch, 0.0, 10 * pitch, dZp + dZ12 + dZ23 + dZu);
+    //meshView.SetArea(-tpcX/2, 0, tpcX/2, dZp + dZ12 + dZ23 + dZu);
     meshView.Plot();
 
     app.Run(true);
