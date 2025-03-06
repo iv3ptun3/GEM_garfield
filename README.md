@@ -1,12 +1,12 @@
-Written by Hyunmin Yang, HANUL, Korea University.
-Updated by Haein Lee, HANUL, Korea University.
+Written by Hyunmin Yang & Haein Lee, HANUL, Korea University.
+Updated by HeeJeong BYEON, HNP, Kyungpook National University
 
 This program simulates TPC(Time Projection Chamber) with tripple GEMs.
 Interation between charged particles and gas medium will be simulated with Geant4.
 Drift and multiplication of electrons ionized by charged particle will be simulated with Garfield++.
 
 # Environment
-Ubuntu or MacOs(maybe?).
+Ubuntu or MacOs.
 
 # Prerequisites
 - ROOT version 6  
@@ -31,7 +31,9 @@ All script files are located in **scripts** directory
 - gen_all.sh        :   Executes two scripts above in once and delete unnecessary files.
 
 # Executables
-- 
+- tgem
+- tgem_gain
+- view_tgem
 
 # Garfield++
 
@@ -57,7 +59,7 @@ After running, **[SCRIPT_NAME].geo**, **[SCRIPT_NAME].sif** and **[SCRIPT_NAME/]
 ## Meshing
 Next, you have to generate a 3D mesh file describing unit cell of tripple GEM.
 ```
-gmsh [SCRIPT_NAME].geo -3 -order 2
+gmsh [SCRIPT_NAME].geo -3 -order 2 -format msh2 -o test.msh
 ```
 After running, **[SCRIPT_NAME].msh** will be created on your directory.
 ## Generating field map data.
